@@ -1,0 +1,19 @@
+# This file is used to prefetch the requirements to speed up docker builds.
+numpy
+scipy
+matplotlib
+sk-video
+moviepy
+opencv-python
+tqdm
+jupyter
+tabulate
+torch
+torchvision
+Cython
+
+
+# Download compressed repositories to speedup installationself.
+# Use tar.gz as .zip can fail with unicode filenames.
+# example:
+# https://github.com/fizyr/keras-retinanet/archive/master.tar.gz

@@ -102,3 +102,17 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Local:
+subVideos/
+.DS_Store
+.vscode/
+*.mp4
+test/
+venv/
+*saved/
+*launch.json
+*_debug_.py
+*cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+*temp/
