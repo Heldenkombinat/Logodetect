@@ -11,7 +11,7 @@ import torch
 # Global #
 ##########
 
-PATH = os.path.join(os.environ['HKT'], 'Mircea', 'Logos-Recognition')
+PATH = os.path.join(os.environ['HKT'], 'Logos-Recognition')
 PATH_EXEMPLARS = os.path.join(os.environ['DATASETS'], 'logos', 'exemplars')
 LOAD_NAME = os.path.join(PATH, 'data', 'test_video_small.mp4')
 name, extension = os.path.splitext(LOAD_NAME)  # extension includes the '.'
