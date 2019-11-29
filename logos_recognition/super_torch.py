@@ -26,12 +26,12 @@ class SuperTorch(abc.ABC):
             # just 2 classes: background and logo
             model.roi_heads.box_predictor = model_top(in_features, 2)
 
-        # load weights if provided
+        # Load weights if they exist:
         if os.path.isfile(model_weights):
             # we need to give the map_location argument
             checkpoint = torch.load(model_weights, map_location=DEVICE)
             # there is other stuff saved in the checkpoint also
-            model.load_state_dict(checkpoint["state_dict"])
+            model.load_state_dict(checkpoint['state_dict'])
 
         # we move it to the device
         model.to(DEVICE)
@@ -41,9 +41,9 @@ class SuperTorch(abc.ABC):
 
     def _select_detections(self, detections, selections):
         "Add documentation."
-        detections["boxes"] = detections["boxes"][selections]
-        detections["labels"] = detections["labels"][selections]
-        detections["scores"] = detections["scores"][selections]
-        if "masks" in detections:
-            detections["masks"] = detections["masks"][selections]
+        detections['boxes'] = detections['boxes'][selections]
+        detections['labels'] = detections['labels'][selections]
+        detections['scores'] = detections['scores'][selections]
+        if 'brands' in detections.keys():
+            detections['brands'] = detections['brands'][selections]
         return detections
