@@ -11,6 +11,10 @@ tabulate
 torch
 torchvision
 Cython
+pylint
+autopep8
+sklearn
+pandas
 
 
 # Download compressed repositories to speedup installationself.

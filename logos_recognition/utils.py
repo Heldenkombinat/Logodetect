@@ -5,6 +5,7 @@ import os
 
 # Pip packages:
 import numpy as np
+import pandas as pd
 from PIL import Image
 from torchvision.transforms import functional as F
 
@@ -36,3 +37,22 @@ def open_resize_and_load_gpu(path, device=None):
 def get_class_name(path):
     "Add documentation."
     return os.path.split(path)[1].split(".")[0]
+
+
+def clean_name(filename):
+    '''
+    >> ' '.join(sorted(set(''.join(list(set(brands))))))
+    >> "& ' + - 1 2 3 4 ? a b c d e f g h i j kl m n
+        o p q r s t u v w x y z \udcbc \udcc3 \udcfc"
+    '''
+    name, extension = os.path.splitext(os.path.basename(filename))
+    brand = name.split('_')[0]
+    return brand.encode('ascii', 'replace').decode()
+
+
+def save_df(vectors, filenames, path, net_type=''):
+    vectors_list = [v for v in vectors]
+    brands = [clean_name(n) for n in filenames]
+    logos_df = pd.DataFrame({'brand': brands, 'img_vec': vectors_list})
+    # Save data:
+    logos_df.to_pickle(path + '{}.zip'.format(net_type))

@@ -16,7 +16,8 @@ from PIL import Image
 
 # Logos-Recognition:
 from logos_recognition.detector import Detector
-from logos_recognition.classifier import Classifier
+# from logos_recognition.classifier import Classifier
+from logos_recognition.classifier import KNNClassifier
 from logos_recognition.utils import (get_class_name,
                                      open_resize_and_load_gpu)
 from logos_recognition.constants import QUERY_LOGOS
@@ -28,7 +29,8 @@ class Recognizer(object):
     def __init__(self):
         "Add documentation."
         self.detector = Detector()
-        self.classifier = Classifier()
+        # self.classifier = Classifier()
+        self.classifier = KNNClassifier()
         self.video = None
         self.frame_duration = None
         self.total_frames = None
@@ -37,7 +39,14 @@ class Recognizer(object):
         self.query_logos_names = None
 
     def recognize(self, load_name, output_path, query_logos):
-        "Add documentation."
+        '''
+        classifications = {
+            'boxes': [] or 2D array (float32),
+            'labels': [] or 1D array (int),
+            'scores': [] or 1D array (float32),
+            'brands': [] or 1D array (str)
+            }
+        '''
         # load query logos
         self.load_query_logos(query_logos)
         # deal with the video
@@ -52,26 +61,25 @@ class Recognizer(object):
                           desc="Processing video"):
             # Detect all classes:
             detections = self.detector.predict(frame)
+            if len(detections['boxes']) == 0:
+                detections['brands'] = []
+                recognitions.append(detections)
+                continue
             # Select the desired classes:
             classifications = self.classifier.predict(
                 detections, frame, self.query_logos)
             recognitions.append(classifications)
 
-        # Apply filters/enhancements to recognitions:
-        recognitions = self.process_recognitions(recognitions)
         # Draw the final detections:
         self.draw_and_save_video(recognitions, output_path)
 
     def load_query_logos(self, query_logos):
         "Add documentation."
         # save the class names
-        query_logos_names = [get_class_name(path)
-                             for path in query_logos]
-        query_logos = [open_resize_and_load_gpu(path)
-                       for path in query_logos]
-
-        self.query_logos_names = query_logos_names
-        self.query_logos = query_logos
+        self.query_logos_names = [get_class_name(path)
+                                  for path in query_logos]
+        self.query_logos = [open_resize_and_load_gpu(path)
+                            for path in query_logos]
 
     def set_video_source(self, load_name):
         "Add documentation."
@@ -79,10 +87,6 @@ class Recognizer(object):
         self.frame_duration = (1 / self.video.fps)
         self.total_frames = int(self.video.reader.nframes)
         self.video_area = self.video.size[0] * self.video.size[1]
-
-    def process_recognitions(self, recognitions):
-        "Add documentation."
-        return recognitions
 
     def draw_and_save_video(self, recognitions, output_path):
         "Add documentation."
@@ -99,20 +103,24 @@ class Recognizer(object):
 
     def overlay_boxes(self, image, recognitions):
         "Add documentation."
-        boxes = recognitions["boxes"]
-        scores = recognitions["scores"]
-        labels = recognitions["labels"]
+        boxes = recognitions['boxes']
+        labels = recognitions['labels']
+        scores = recognitions['scores']
+        brands = recognitions['brands']
 
-        # determine class colors
-        cmap = plt.cm.get_cmap("jet", len(self.query_logos_names))
+        # Define class colors:
+        # cmap = plt.cm.get_cmap("jet", len(self.query_logos_names))
+        cmap = plt.cm.get_cmap("jet", len(brands))
+        font = cv2.FONT_HERSHEY_SIMPLEX
 
         template = "{}: {:.2f}"
-        for box, score, label in zip(boxes, scores, labels):
+        for box, label, score, brand in zip(boxes, labels, scores, brands):
+
+            top_left, bottom_right = tuple(box[:2]), tuple(box[2:])
             color = tuple(np.array(cmap(label))[:3] * 255)
-            top_left, bottom_right = box[:2], box[2:]
-            image = cv2.rectangle(image, tuple(top_left),
-                                  tuple(bottom_right), color, 2)
-            text = template.format(self.query_logos_names[label], score)
-            cv2.putText(image, text, tuple(top_left),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+            image = cv2.rectangle(image, top_left, bottom_right, color, 2)
+            # text = template.format(self.query_logos_names[label], score)
+            text = template.format(brand, score)
+            cv2.putText(image, text, top_left, font, 0.7, color, 2)
+            
         return image
