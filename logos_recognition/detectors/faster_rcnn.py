@@ -7,31 +7,27 @@ import os
 import numpy as np
 import torch
 
-# Github repos:
-from torchvision.models.detection import fasterrcnn_resnet50_fpn
-from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-
-# Logos-Recognition:
-from logos_recognition.super_torch import SuperTorch
+# Current library:
+from logos_recognition import detectors
 from logos_recognition.utils import image_to_gpu_tensor
-from logos_recognition.constants import DETECTOR_WEIGHTS, MIN_CONFIDENCE
+from logos_recognition.constants import (DETECTOR_DEVICE, DETECTOR_ALG,
+                                         DETECTOR_WEIGHTS, MIN_CONFIDENCE)
 
 
 
-class Detector(SuperTorch):
+class Detector():
     "Add documentation."
 
     def __init__(self):
         "Add documentation."
-        DETECTOR_BASE = fasterrcnn_resnet50_fpn
-        DETECTOR_TOP = FastRCNNPredictor
-        self.model = self._load(DETECTOR_BASE, DETECTOR_WEIGHTS, DETECTOR_TOP)
+        self.model = detectors.__dict__[
+            DETECTOR_ALG](DETECTOR_DEVICE, DETECTOR_WEIGHTS)
 
     @torch.no_grad()
     def predict(self, image):
         "Add documentation."
-        image = image_to_gpu_tensor(image)
-        # For some reason it's a list with one element:
+        image = image_to_gpu_tensor(image, DETECTOR_DEVICE)
+        # Always returns list with one element:
         detections = self.model(image)[0]
         return self._process_detections(detections)
 
@@ -44,8 +40,16 @@ class Detector(SuperTorch):
         return self._select_detections(detections, selections)
 
     def _detections_to_cpu(self, detections):
-        "Moves all the fields of `detections` to the CPU."
+        "Moves all the fields of 'detections' to the CPU."
         detections['boxes'] = detections['boxes'].cpu().numpy()
         detections['labels'] = detections['labels'].cpu().numpy()
         detections['scores'] = detections['scores'].cpu().numpy()
+        return detections
+
+    def _select_detections(self, detections, selections):
+        "Add documentation."
+        detections['boxes'] = detections['boxes'][selections]
+        detections['labels'] = detections['labels'][selections]
+        detections['scores'] = detections['scores'][selections]
+        detections['brands'] =[]
         return detections

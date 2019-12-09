@@ -1,14 +1,13 @@
 "Top module for client-specific application."
 
 # Standard library:
+import argparse
 
-# Pip packages:
-
-# Github repos:
-
-# Local:
-from logos_recognition.constants import LOAD_NAME, OUTPUT_NAME, QUERY_LOGOS
+# Current library:
 from logos_recognition.recognizer import Recognizer
+from logos_recognition.constants import (VIDEO_FILENAME, OUTPUT_NAME,
+                                         EXEMPLARS_PATHS)
+
 
 
 class App(object):
@@ -18,22 +17,28 @@ class App(object):
         "Add documentation."
         self.recognizer = Recognizer()
 
-    def run(self, load_name=None, output_name=None, query_logos=None):
+    def run(self, input_filename, output_name, exemplars_paths):
         "Add documentation."
-
-        # Video paths
-        load_name = load_name if load_name else LOAD_NAME
-        output_name = output_name if output_name else OUTPUT_NAME
-        query_logos = query_logos if query_logos else QUERY_LOGOS
-
-        # Analyze video
-        self.recognizer.recognize(load_name, output_name, query_logos)
+        self.recognizer.recognize(input_filename, output_name, exemplars_paths)
 
 
 if __name__ == "__main__":
+
+    # Set argument parser:
+    parser = argparse.ArgumentParser(description='One-shot object detector.')
+    parser.add_argument('-inp', '--input_filename', type=str,
+                        help='Filename of video to process.',
+                        default=VIDEO_FILENAME)
+    parser.add_argument('-out', '--output_filename', type=str,
+                        help='Savename of video to process.',
+                        default=OUTPUT_NAME)
+    parser.add_argument('-exm', '--exemplars_paths', type=str,
+                        help='Filenames of exemplars to detect.',
+                        default=EXEMPLARS_PATHS)
+    args = parser.parse_args()
 
     # Create instance of application:
     APP = App()
 
     # Process video:
-    APP.run()
+    APP.run(args.input_filename, args.output_filename, args.exemplars_paths)
