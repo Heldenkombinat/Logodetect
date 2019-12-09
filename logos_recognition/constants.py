@@ -14,13 +14,9 @@ import torch
 PATH_GLOB = os.path.join(os.environ['HKT'], 'Logos-Recognition')
 PATH_DATA = os.path.join(os.environ['DATASETS'], 'logos')
 VIDEO_FILENAME = os.path.join(PATH_GLOB, 'data', 'test_video_small.mp4')
-name, extension = os.path.splitext(VIDEO_FILENAME)  # extension includes the '.'
-OUTPUT_NAME = VIDEO_FILENAME.replace(extension, '_output.mp4')
 PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars')
 # BRAND_LOGOS = ['pepsi', 'redbull', 'heineken', 'stellaartois']
 BRAND_LOGOS = ['redbull']
-EXEMPLARS_PATHS = [os.path.join(PATH_EXEMPLARS, logo + '.jpg')
-               for logo in BRAND_LOGOS]
 IMAGE_RESIZE = (100, 100)
 USE_CLASSIFIER = True
 
