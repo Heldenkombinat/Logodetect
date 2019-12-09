@@ -2,12 +2,9 @@
 numpy
 scipy
 matplotlib
-sk-video
 moviepy
 opencv-python
 tqdm
-jupyter
-tabulate
 torch
 torchvision
 Cython
