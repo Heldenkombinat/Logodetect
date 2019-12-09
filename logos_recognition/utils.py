@@ -9,15 +9,13 @@ import pandas as pd
 from PIL import Image
 from torchvision.transforms import functional as F
 
-# Github repos:
-
-# Logos-Recognition:
-from logos_recognition.constants import DEVICE, IMAGE_RESIZE
+# Current library:
+from logos_recognition.constants import IMAGE_RESIZE
 
 
-def image_to_gpu_tensor(image, device=None):
+
+def image_to_gpu_tensor(image, device):
     "Checks if image is valid and moves it to the GPU."
-    device = device if device else DEVICE
     # convert to numpy if input is PIL image
     if isinstance(image, Image.Image):
         image = np.array(image)
@@ -27,16 +25,17 @@ def image_to_gpu_tensor(image, device=None):
     return F.to_tensor(image).unsqueeze(0).to(device)
 
 
-def open_resize_and_load_gpu(path, device=None):
+def open_resize_and_load_gpu(path, device):
     "Add documentation."
     # load image and resize it
-    image = Image.open(path).convert("RGB").resize(IMAGE_RESIZE)
+    image = Image.open(path).convert('RGB').resize(IMAGE_RESIZE)
     # convert it to gpu tensor
-    return image_to_gpu_tensor(image)
+    return image_to_gpu_tensor(image, device)
+
 
 def get_class_name(path):
     "Add documentation."
-    return os.path.split(path)[1].split(".")[0]
+    return os.path.split(path)[1].split('.')[0]
 
 
 def clean_name(filename):
