@@ -12,13 +12,13 @@ from logos_recognition.constants import VIDEO_FILENAME, PATH_EXEMPLARS
 class App(object):
     "Add documentation."
 
-    def __init__(self):
+    def __init__(self, exemplars_path):
         "Add documentation."
-        self.recognizer = Recognizer()
+        self.recognizer = Recognizer(exemplars_path)
 
-    def run(self, video_filename, exemplars_path):
+    def run(self, video_filename):
         "Add documentation."
-        self.recognizer.recognize(video_filename, exemplars_path)
+        self.recognizer.predict(video_filename)
 
 
 if __name__ == "__main__":
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Create instance of application:
-    APP = App()
+    APP = App(args.exemplars_path)
 
     # Process video:
-    APP.run(args.video_filename, args.exemplars_path)
+    APP.run(args.video_filename)

@@ -45,6 +45,7 @@ CLASSIFIER_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'classifier.pth')
 CLASSIFIER_DEVICE = 'cuda:3'
 
 PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, 'exemplars_siamese.zip')
+LOAD_EMBEDDINGS = True
 EMBEDDING_SIZE = 345
 DISTANCE = 'cosine'  # {cosine, minkowski_1, minkowski_2}
 MAX_DISTANCE = 0.015  # {siamese-cosine: 0.013}

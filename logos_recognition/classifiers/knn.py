@@ -13,28 +13,31 @@ import torchvision
 
 # Current library:
 from logos_recognition import classifiers
+from logos_recognition.utils import open_resize_and_load_gpu, get_class_name
 from logos_recognition.constants import (CLASSIFIER_ALG, PATH_EXEMPLARS_EMBEDDINGS,
                                          REPRESENTER_ALG, REPRESENTER_WEIGHTS,
                                          REPRESENTER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
-                                         EMBEDDING_SIZE, DISTANCE, MAX_DISTANCE)
+                                         LOAD_EMBEDDINGS, EMBEDDING_SIZE, DISTANCE,
+                                         MAX_DISTANCE)
 
 
 
 class Classifier():
     "Add documentation."
 
-    def __init__(self):
+    def __init__(self, exemplar_paths):
         "Add documentation."
-        self.transform = self.set_transform()
+        # Define class variables:
+        self.exemplars_vecs = None
+        self.exemplars_brands = None
         
+        # Set image transforms for inference:
+        self.transform = self.set_transform()
+        # Set the network to perform image embeddings:
         self.representer = classifiers.__dict__[
             REPRESENTER_ALG](REPRESENTER_DEVICE, REPRESENTER_WEIGHTS)
-
-        exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
-        mask = exemplars['brand'].isin(BRAND_LOGOS)
-        self.exemplars_vecs = list(exemplars['img_vec'][mask])
-        self.exemplars_brands = list(exemplars['brand'][mask])
-
+        # Set the network to classify the detections:
+        self.embed_exemplars(exemplar_paths)
         self.classifier = self.set_classifier()
         
     def set_transform(self):
@@ -61,7 +64,7 @@ class Classifier():
             sys.exit()
         return model.fit(self.exemplars_vecs, self.exemplars_brands)
 
-    def predict(self, detections, image, query_logos):
+    def predict(self, detections, image):
         "Add documentation."
         if len(detections['boxes']) != 0:
             image = Image.fromarray(image)
@@ -69,6 +72,29 @@ class Classifier():
             return self.classify_embeddings(detections)
         else:
             return detections
+
+    def embed_exemplars(self, exemplars_paths):
+        "Add documentation."
+        if LOAD_EMBEDDINGS:
+            # Load embeddings and names of exemplars:
+            exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
+            mask = exemplars['brand'].isin(BRAND_LOGOS)
+            self.exemplars_vecs = list(exemplars['img_vec'][mask])
+            self.exemplars_brands = list(exemplars['brand'][mask])
+        else:
+            self.exemplars_vecs = np.zeros(
+                (len(exemplars_paths), EMBEDDING_SIZE))
+            for idx, path in enumerate(exemplars_paths):
+                image = open_resize_and_load_gpu(
+                    path, REPRESENTER_DEVICE, IMAGE_RESIZE)
+                image = self.transform(image).unsqueeze(0).to(
+                    REPRESENTER_DEVICE, dtype=torch.float)
+                embedding = self.representer(image)
+                embedding = nn_F.normalize(embedding, p=2, dim=1)
+                embedding = embedding.squeeze().detach().cpu().numpy()
+                self.exemplars_vecs[idx, :] = embedding
+            self.exemplars_brands = [get_class_name(path)
+                                     for path in exemplars_paths]
 
     def embed_detections(self, image, detections):
         "Add documentation."
@@ -78,13 +104,13 @@ class Classifier():
             crop = image.crop(box).resize(IMAGE_RESIZE)
             crop = self.transform(crop).unsqueeze(0).to(
                 REPRESENTER_DEVICE, dtype=torch.float)
-            features = self.representer(crop)
-            features = nn_F.normalize(features, p=2, dim=1)
-            features =  features.squeeze().detach().cpu().numpy()
-            detections_mat[idx, :] = features
+            embedding = self.representer(crop)
+            embedding = nn_F.normalize(embedding, p=2, dim=1)
+            embedding = embedding.squeeze().detach().cpu().numpy()
+            detections_mat[idx, :] = embedding
         detections['embeddings'] = detections_mat
         return detections
-    
+
     def classify_embeddings(self, detections):
         "Add documentation."
         dists, classes = self.classifier.kneighbors(detections['embeddings'])

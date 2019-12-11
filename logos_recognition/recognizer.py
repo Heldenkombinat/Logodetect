@@ -2,6 +2,7 @@
 
 # Standard library:
 import os
+import glob
 from importlib import import_module
 
 # Pip packages:
@@ -16,31 +17,35 @@ from PIL import Image
 # Current library:
 from logos_recognition.utils import get_class_name, open_resize_and_load_gpu
 from logos_recognition.constants import (DETECTOR, CLASSIFIER, DETECTOR_DEVICE,
-                                         USE_CLASSIFIER, BRAND_LOGOS)
+                                         USE_CLASSIFIER, BRAND_LOGOS, IMAGE_RESIZE)
 
 
 
 class Recognizer(object):
     "Add documentation."
 
-    def __init__(self):
+    def __init__(self, exemplars_path):
         "Add documentation."
-        self.detector = import_module(DETECTOR).Detector()
-        if USE_CLASSIFIER:
-            self.classifier = import_module(CLASSIFIER).Classifier()
+        # Define class variables:
         self.video = None
         self.frame_duration = None
         self.total_frames = None
         self.video_area = None
         self.video_secs = None
         self.window = None
-        self.exemplars_names = None
         self.exemplars_set = None
         self.cmap = None
-        self.exemplars_paths = None
+        self.exemplar_paths = None
         self.frames_handle = None
 
-    def recognize(self, video_filename, exemplars_path):
+        self.exemplars_path = exemplars_path
+        self.load_exemplar_paths()
+        self.detector = import_module(DETECTOR).Detector()
+        if USE_CLASSIFIER:
+            self.classifier = import_module(
+                CLASSIFIER).Classifier(self.exemplar_paths)
+
+    def predict(self, video_filename):
         '''
         recognitions = [{
             'boxes': [] or 2D array (float32),
@@ -49,7 +54,6 @@ class Recognizer(object):
             'brands': [] or 1D array (str)
             }, {}, {}, ...]
         '''
-        self.load_exemplars_paths(exemplars_path)
         self.set_video_source(video_filename)
 
         # Extract detections frame by frame:
@@ -57,13 +61,13 @@ class Recognizer(object):
         subclip_handle = self.video.subclip(0, self.video.end)
         for frame in tqdm(subclip_handle.iter_frames(),
                           total=self.total_frames,
-                          desc="Processing video"):
+                          desc='Processing video'):
             # Detect all classes:
             detections = self.detector.predict(frame)
             if USE_CLASSIFIER:
                 # Select the desired classes:
                 classifications = self.classifier.predict(
-                    detections, frame, self.exemplars_paths)
+                    detections, frame)
                 recognitions.append(classifications)
             else:
                 recognitions.append(detections)
@@ -71,15 +75,13 @@ class Recognizer(object):
         self.draw_video(recognitions)
         return self.save_video(video_filename)
 
-    def load_exemplars_paths(self, exemplars_path):
+    def load_exemplar_paths(self):
         "Add documentation."
-        filtered_paths = [os.path.join(exemplars_path, logo + '.jpg')
-                          for logo in BRAND_LOGOS]
-        self.exemplars_paths = [open_resize_and_load_gpu(path, DETECTOR_DEVICE)
-                                for path in filtered_paths]
-        self.exemplars_names = [get_class_name(path)
-                                for path in filtered_paths]
-        self.exemplars_set = sorted(set(self.exemplars_names))
+        all_paths = sorted(glob.glob(os.path.join(self.exemplars_path, '*')))
+        self.exemplar_paths = [path for path in all_paths
+                                if get_class_name(path) in BRAND_LOGOS]
+        self.exemplars_set = sorted(set(
+            [get_class_name(path) for path in self.exemplar_paths]))
         self.cmap = plt.cm.get_cmap('jet', len(self.exemplars_set))
         
     def set_video_source(self, video_filename):
