@@ -11,14 +11,18 @@ import torch
 from torch.nn import functional as nn_F
 import torchvision
 
+# Github packages:
+import imgaug.augmenters as ia
+
 # Current library:
 from logos_recognition import classifiers
-from logos_recognition.utils import open_resize_and_load_gpu, get_class_name
+from logos_recognition.utils import (open_resize_and_load_gpu, open_and_resize,
+                                     get_class_name)
 from logos_recognition.constants import (CLASSIFIER_ALG, PATH_EXEMPLARS_EMBEDDINGS,
                                          REPRESENTER_ALG, REPRESENTER_WEIGHTS,
                                          REPRESENTER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
-                                         LOAD_EMBEDDINGS, EMBEDDING_SIZE, DISTANCE,
-                                         MAX_DISTANCE)
+                                         LOAD_EMBEDDINGS, EMBEDDING_SIZE,
+                                         AUGMENTER_PARAMS, DISTANCE, MAX_DISTANCE)
 
 
 
@@ -37,7 +41,7 @@ class Classifier():
         self.representer = classifiers.__dict__[
             REPRESENTER_ALG](REPRESENTER_DEVICE, REPRESENTER_WEIGHTS)
         # Set the network to classify the detections:
-        self.embed_exemplars(exemplar_paths)
+        self.load_exemplars(exemplar_paths)
         self.classifier = self.set_classifier()
         
     def set_transform(self):
@@ -68,12 +72,12 @@ class Classifier():
         "Add documentation."
         if len(detections['boxes']) != 0:
             image = Image.fromarray(image)
-            detections = self.embed_detections(image, detections)
+            detections = self.load_detections(image, detections)
             return self.classify_embeddings(detections)
         else:
             return detections
 
-    def embed_exemplars(self, exemplars_paths):
+    def load_exemplars(self, exemplars_paths):
         "Add documentation."
         if LOAD_EMBEDDINGS:
             # Load embeddings and names of exemplars:
@@ -82,34 +86,61 @@ class Classifier():
             self.exemplars_vecs = list(exemplars['img_vec'][mask])
             self.exemplars_brands = list(exemplars['brand'][mask])
         else:
-            self.exemplars_vecs = np.zeros(
-                (len(exemplars_paths), EMBEDDING_SIZE))
-            for idx, path in enumerate(exemplars_paths):
-                image = open_resize_and_load_gpu(
-                    path, REPRESENTER_DEVICE, IMAGE_RESIZE)
-                image = self.transform(image).unsqueeze(0).to(
-                    REPRESENTER_DEVICE, dtype=torch.float)
-                embedding = self.representer(image)
-                embedding = nn_F.normalize(embedding, p=2, dim=1)
-                embedding = embedding.squeeze().detach().cpu().numpy()
-                self.exemplars_vecs[idx, :] = embedding
-            self.exemplars_brands = [get_class_name(path)
-                                     for path in exemplars_paths]
+            self.exemplars_vecs = []
+            self.exemplars_brands = []
+            for path in exemplars_paths:
+                brand = get_class_name(path)
+                image = open_and_resize(path, IMAGE_RESIZE)
+                for aug_image in self.get_augmentations(image):
+                    embedding = self.embed_image(aug_image)
+                    self.exemplars_vecs.append(embedding)
+                    self.exemplars_brands.append(brand)
 
-    def embed_detections(self, image, detections):
+    def get_augmentations(self, image):
+        "Add documentation."
+        augmented_images = []
+        # For each combination:
+        for mu in AUGMENTER_PARAMS['Multiply']:
+            for gabl in AUGMENTER_PARAMS['GaussianBlur']:
+                for adga in AUGMENTER_PARAMS['AdditiveGaussianNoise']:
+                    for afsh in AUGMENTER_PARAMS['AffineShear']:
+                        for afro in AUGMENTER_PARAMS['AffineRotate']:
+                            # Process image:
+                            image_aug = self.augment_image(
+                                image, mu, gabl, adga, afsh, afro)
+                            augmented_images.append(image_aug)
+        return augmented_images
+
+    def augment_image(self, image, mu, gabl, adga, afsh, afro):
+        "Add documentation."
+        augmenter = ia.Sequential([
+            ia.Multiply(mul=mu),
+            ia.GaussianBlur(sigma=gabl),
+            ia.AdditiveGaussianNoise(scale=adga),
+            ia.Affine(rotate=afro, shear=afsh),
+        ])
+        # Process image:
+        image_arr = augmenter.augment_images(np.array(image))
+        return Image.fromarray(image_arr)
+
+    def load_detections(self, image, detections):
         "Add documentation."
         detections_mat = np.zeros((len(detections['boxes']), EMBEDDING_SIZE))
         for idx, box in enumerate(detections['boxes']):
             # Extract the detection from the image:
-            crop = image.crop(box).resize(IMAGE_RESIZE)
-            crop = self.transform(crop).unsqueeze(0).to(
-                REPRESENTER_DEVICE, dtype=torch.float)
-            embedding = self.representer(crop)
-            embedding = nn_F.normalize(embedding, p=2, dim=1)
-            embedding = embedding.squeeze().detach().cpu().numpy()
+            image = image.crop(box).resize(IMAGE_RESIZE)
+            embedding = self.embed_image(image)
             detections_mat[idx, :] = embedding
         detections['embeddings'] = detections_mat
         return detections
+
+    def embed_image(self, image):
+        "Add documentation."
+        image = self.transform(image).unsqueeze(0).to(
+            REPRESENTER_DEVICE, dtype=torch.float)
+        embedding = self.representer(image)
+        embedding = nn_F.normalize(embedding, p=2, dim=1)
+        return embedding.squeeze().detach().cpu().numpy()
 
     def classify_embeddings(self, detections):
         "Add documentation."

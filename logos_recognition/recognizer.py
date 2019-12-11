@@ -10,14 +10,15 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import cv2
-from moviepy.editor import VideoFileClip, ImageClip, concatenate
+from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, concatenate
 from moviepy.audio.fx.volumex import volumex
 from PIL import Image
 
 # Current library:
 from logos_recognition.utils import get_class_name, open_resize_and_load_gpu
 from logos_recognition.constants import (DETECTOR, CLASSIFIER, DETECTOR_DEVICE,
-                                         USE_CLASSIFIER, BRAND_LOGOS, IMAGE_RESIZE)
+                                         USE_CLASSIFIER, BRAND_LOGOS, IMAGE_RESIZE,
+                                         EXEMPLARS_FORMAT)
 
 
 
@@ -28,6 +29,7 @@ class Recognizer(object):
         "Add documentation."
         # Define class variables:
         self.video = None
+        self.audio = None
         self.frame_duration = None
         self.total_frames = None
         self.video_area = None
@@ -77,7 +79,8 @@ class Recognizer(object):
 
     def load_exemplar_paths(self):
         "Add documentation."
-        all_paths = sorted(glob.glob(os.path.join(self.exemplars_path, '*')))
+        all_paths = sorted(glob.glob(os.path.join(
+            self.exemplars_path, '*.{}'.format(EXEMPLARS_FORMAT))))
         self.exemplar_paths = [path for path in all_paths
                                 if get_class_name(path) in BRAND_LOGOS]
         self.exemplars_set = sorted(set(
@@ -88,9 +91,9 @@ class Recognizer(object):
         "Add documentation."
         # Set source:
         self.video = VideoFileClip(video_filename)
+        self.audio = AudioFileClip(video_filename)
         # Get video metadata:
-        self.fps = self.video.fps
-        self.frame_duration = (1 / self.fps)
+        self.frame_duration = (1 / self.video.fps)
         self.total_frames = int(self.video.reader.nframes)
         self.video_area = self.video.size[0] * self.video.size[1]
         self.video_secs = int(self.video.duration)
@@ -103,7 +106,8 @@ class Recognizer(object):
                                          total=self.total_frames,
                                          desc='Rendering video')):
             result = self.overlay_boxes(frame, recognitions[idx])
-            frames_list.append(ImageClip(result).set_duration(1))
+            new_frame = ImageClip(result).set_duration(self.frame_duration)
+            frames_list.append(new_frame)
         # Args necessary to keep audio in all players:
         self.frames_handle = concatenate(frames_list)
 
@@ -129,11 +133,12 @@ class Recognizer(object):
         # 'extension' includes the '.':
         name, extension = os.path.splitext(video_filename)
         output_filename = video_filename.replace(extension, '_output.mp4')
+        self.frames_handle.set_audio(self.audio)
         self.frames_handle.write_videofile(
             output_filename,
             codec='libx264',
             audio_codec='aac',
             temp_audiofile=output_filename + '.tmp',
             remove_temp=True,
-            fps=self.fps)
+            fps=self.video.fps)
         return output_filename

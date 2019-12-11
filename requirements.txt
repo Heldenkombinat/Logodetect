@@ -14,7 +14,6 @@ sklearn
 pandas
 
 
-# Download compressed repositories to speedup installationself.
+# Download compressed repositories to speedup installation.
 # Use tar.gz as .zip can fail with unicode filenames.
-# example:
-# https://github.com/fizyr/keras-retinanet/archive/master.tar.gz
+https://github.com/aleju/imgaug/archive/master.tar.gz
