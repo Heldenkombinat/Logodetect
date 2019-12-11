@@ -11,6 +11,19 @@ from torchvision.transforms import functional as F
 
 
 
+def open_resize_and_load_gpu(path, device, image_resize):
+    "Add documentation."
+    # Load image and resize it:
+    image = open_and_resize(path, image_resize)
+    # Convert it to gpu tensor:
+    return image_to_gpu_tensor(image, device)
+
+
+def open_and_resize(path, image_resize):
+    "Checks if image is valid and moves it to the GPU."
+    return Image.open(path).convert('RGB').resize(image_resize)
+
+
 def image_to_gpu_tensor(image, device):
     "Checks if image is valid and moves it to the GPU."
     # Convert to numpy if input is PIL image:
@@ -20,14 +33,6 @@ def image_to_gpu_tensor(image, device):
         raise Exception("'predict' method takes a 3D image as input \
             of shape (H, W, 3). Instead got {}".format(image.shape))
     return F.to_tensor(image).unsqueeze(0).to(device)
-
-
-def open_resize_and_load_gpu(path, device, image_resize):
-    "Add documentation."
-    # Load image and resize it:
-    image = Image.open(path).convert('RGB').resize(image_resize)
-    # Convert it to gpu tensor:
-    return image_to_gpu_tensor(image, device)
 
 
 def get_class_name(path):
