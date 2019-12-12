@@ -13,7 +13,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 
 
-def stacked_resnet18(device):
+def binary_stacked_resnet18(device):
     '''
     Creates a ResNet18 with a 6-channel input.
     '''
