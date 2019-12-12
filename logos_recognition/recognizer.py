@@ -15,7 +15,7 @@ from moviepy.audio.fx.volumex import volumex
 from PIL import Image
 
 # Current library:
-from logos_recognition.utils import get_class_name, open_resize_and_load_gpu
+from logos_recognition.utils import clean_name, open_resize_and_load_gpu
 from logos_recognition.constants import (DETECTOR, CLASSIFIER, DETECTOR_DEVICE,
                                          USE_CLASSIFIER, BRAND_LOGOS, IMAGE_RESIZE,
                                          EXEMPLARS_FORMAT)
@@ -82,9 +82,9 @@ class Recognizer(object):
         all_paths = sorted(glob.glob(os.path.join(
             self.exemplars_path, '*.{}'.format(EXEMPLARS_FORMAT))))
         self.exemplar_paths = [path for path in all_paths
-                                if get_class_name(path) in BRAND_LOGOS]
+                               if clean_name(path) in BRAND_LOGOS]
         self.exemplars_set = sorted(set(
-            [get_class_name(path) for path in self.exemplar_paths]))
+            [clean_name(path) for path in self.exemplar_paths]))
         self.cmap = plt.cm.get_cmap('jet', len(self.exemplars_set))
         
     def set_video_source(self, video_filename):

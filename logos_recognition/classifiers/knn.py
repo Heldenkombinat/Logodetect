@@ -17,7 +17,7 @@ import imgaug.augmenters as ia
 # Current library:
 from logos_recognition import classifiers
 from logos_recognition.utils import (open_resize_and_load_gpu, open_and_resize,
-                                     get_class_name)
+                                     clean_name)
 from logos_recognition.constants import (CLASSIFIER_ALG, PATH_EXEMPLARS_EMBEDDINGS,
                                          REPRESENTER_ALG, REPRESENTER_WEIGHTS,
                                          REPRESENTER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
@@ -89,8 +89,12 @@ class Classifier():
             self.exemplars_vecs = []
             self.exemplars_brands = []
             for path in exemplars_paths:
-                brand = get_class_name(path)
+                brand = clean_name(path)
                 image = open_and_resize(path, IMAGE_RESIZE)
+
+                embedding = self.embed_image(image)
+                self.exemplars_vecs.append(embedding)
+                self.exemplars_brands.append(brand)
                 for aug_image in self.get_augmentations(image):
                     embedding = self.embed_image(aug_image)
                     self.exemplars_vecs.append(embedding)
