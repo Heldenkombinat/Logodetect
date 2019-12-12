@@ -11,80 +11,97 @@ import torch
 
 # Current library:
 from logos_recognition import classifiers
-from logos_recognition.utils import image_to_gpu_tensor
-from logos_recognition.constants import (CLASSIFIER_ALG, CLASSIFIER_WEIGHTS,
-                                         CLASSIFIER_DEVICE, IMAGE_RESIZE)
+from logos_recognition.augmenters.outdoors import get_augmentations
+from logos_recognition.utils import (clean_name, open_and_resize,
+                                     image_to_gpu_tensor)
+from logos_recognition.constants import (CLASSIFIER_ALG, CLASSIFIER_DEVICE,
+                                         IMAGE_RESIZE, AUGMENTER_PARAMS,
+                                         MIN_CONFIDENCE)
 
 
 
 class Classifier():
     "Add documentation."
 
-    def __init__(self):
+    def __init__(self, exemplar_paths):
         "Add documentation."
-        self.model = classifiers.__dict__[
-            CLASSIFIER_ALG](CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS)
+        # Define class variables:
+        self.exemplars_imgs = None
+        self.exemplars_brands = None
 
-    def predict(self, detections, image, query_logos):
+        # Set the network to classify the detections:
+        self.load_exemplars(exemplar_paths)
+        self.classifier = classifiers.__dict__[
+            CLASSIFIER_ALG](CLASSIFIER_DEVICE)
+
+    def load_exemplars(self, exemplars_paths):
+        "Add documentation."
+        self.exemplars_imgs = []
+        self.exemplars_brands = []
+        for path in exemplars_paths:
+            brand = clean_name(path)
+            image = open_and_resize(path, IMAGE_RESIZE)
+
+            # Store clean image:
+            image_gpu = image_to_gpu_tensor(image, CLASSIFIER_DEVICE)
+            self.exemplars_imgs.append(image_gpu)
+            self.exemplars_brands.append(brand)
+
+            # Store augmented image:
+            for aug_image in get_augmentations(image):
+                aug_image_gpu = image_to_gpu_tensor(
+                    aug_image, CLASSIFIER_DEVICE)
+                self.exemplars_imgs.append((aug_image_gpu))
+                self.exemplars_brands.append(brand)
+
+    def predict(self, detections, image):
         "Add documentation."
         if len(detections['boxes']) != 0:
             image = Image.fromarray(image)
             # Compare each detection to each exemplar in one forward pass:
-            comb_input, comb_info = self._create_comb_input(
-                image, detections, query_logos)
-            output = self.model(comb_input).detach().cpu().numpy()
-            detections = self._process_output(output, detections, query_logos)
-        else:
-            return detections
-
-    def _create_comb_input(self, image, detections, query_logos):
-        "Add documentation."
-        # comb_input will be a batch storing all combinations
-        # of detections and exemplars and will have a size of
-        # (n_detections * n_exemplars, 6, H, W)
-        comb_input = []
-        # comb_info will store the combination indices so we know what's what
-        comb_info = {'order': 'Detection-Exemplar', 'indices': []}
-        for i, box in enumerate(detections['boxes']):
-            # extract the detection from the image and convert
-            detection = image_to_gpu_tensor(
-                image.crop(box).resize(IMAGE_RESIZE), CLASSIFIER_DEVICE)
-            for j, exemplar in enumerate(query_logos):
-                # now concatenate with the exemplar
-                comb_input.append(torch.cat((detection, exemplar), 1))
-                comb_info['indices'].append([i, j])
-        comb_input = torch.cat(comb_input).to(CLASSIFIER_DEVICE)
-        return comb_input, comb_info
-
-    def _process_output(self, output, detections, query_logos):
-        "Add documentation."
-        # process the output
-        n_logos = len(query_logos)
-        n_detections = len(detections['boxes'])
-        scores = self._create_output_mat(output, n_detections, n_logos)
-        # go through each detection
-        selection = np.ones(n_detections).astype(np.bool)
-        for i, row in enumerate(scores):
-            if np.sum(np.round(row)) >= 1:
-                # we have at least a match
-                detections['labels'][i] = np.argmax(row)
-                detections['scores'][i] = np.max(row)
-            else:
-                # no match
-                selection[i] = False
-        detections = self._select_detections(detections, selection)
+            comb_images = self._create_comb_images(image, detections)
+            comb_scores = self.classifier(comb_images).detach().cpu().numpy()
+            detections = self._process_scores(comb_scores, detections)
         return detections
 
-    def _create_output_mat(self, output, n_detections, n_logos):
+    def _create_comb_images(self, image, detections):
+        '''
+        comb_images: Is a batch storing all combinations
+                     of detections and exemplars and will have a size of
+                     (n_detections * n_exemplars, 6, H, W)
+        '''
+        comb_images = []
+        for box in detections['boxes']:
+            # Extract the detection from the image:
+            crop = image.crop(box).resize(IMAGE_RESIZE)
+            detection = image_to_gpu_tensor(crop, CLASSIFIER_DEVICE)
+
+            for exemplar in self.exemplars_imgs:
+                # Concatenate with the exemplar:
+                comb_images.append(torch.cat((detection, exemplar), 1))
+        
+        return torch.cat(comb_images).to(CLASSIFIER_DEVICE)
+
+    def _process_scores(self, comb_scores, detections):
         "Add documentation."
-        scores = np.zeros((n_detections, n_logos))
-        idx = 0
-        for i in range(n_detections):
-            for j in range(n_logos):
-                # Extract the detection from the image and convert:
-                scores[i, j] = output[idx]
-                idx += 1
-        return scores
+        n_detections = len(detections['boxes'])
+        n_logos = len(self.exemplars_imgs)
+        selections = np.zeros(n_detections).astype(np.bool)
+
+        for n_det in range(n_detections):
+            a = n_det * n_logos
+            b = a + n_logos - 1
+            scores = comb_scores[a:b]
+
+            if scores.any() >= MIN_CONFIDENCE:
+                detections['labels'][n_det] = np.argmax(scores)
+                detections['scores'][n_det] = np.max(scores)
+                selections[n_det] = True
+
+        brands = [self.exemplars_brands[idx] 
+                  for idx in detections['labels']]
+        detections['brands'] = np.array(brands)
+        return self._select_detections(detections, selections)
 
     def _select_detections(self, detections, selections):
         "Add documentation."
