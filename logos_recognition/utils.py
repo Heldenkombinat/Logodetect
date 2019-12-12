@@ -35,11 +35,6 @@ def image_to_gpu_tensor(image, device):
     return F.to_tensor(image).unsqueeze(0).to(device)
 
 
-def get_class_name(path):
-    "Add documentation."
-    return os.path.split(path)[1].split('.')[0]
-
-
 def clean_name(filename):
     '''
     >> ' '.join(sorted(set(''.join(list(set(brands))))))

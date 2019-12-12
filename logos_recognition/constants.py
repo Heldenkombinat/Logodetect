@@ -25,7 +25,10 @@ BRAND_LOGOS = ['redbull']
 
 PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, 'exemplars_siamese.zip')
 LOAD_EMBEDDINGS = False
-PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars')
+
+# PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars')
+PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars_hq')
+
 EXEMPLARS_FORMAT = 'jpg'
 IMAGE_RESIZE = (100, 100)
 USE_CLASSIFIER = True
