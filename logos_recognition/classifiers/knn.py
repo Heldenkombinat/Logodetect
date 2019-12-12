@@ -11,18 +11,16 @@ import torch
 from torch.nn import functional as nn_F
 import torchvision
 
-# Github packages:
-import imgaug.augmenters as ia
-
 # Current library:
 from logos_recognition import classifiers
+from logos_recognition.augmenters.outdoors import get_augmentations
 from logos_recognition.utils import (open_resize_and_load_gpu, open_and_resize,
                                      clean_name)
 from logos_recognition.constants import (CLASSIFIER_ALG, PATH_EXEMPLARS_EMBEDDINGS,
                                          REPRESENTER_ALG, REPRESENTER_WEIGHTS,
                                          REPRESENTER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
                                          LOAD_EMBEDDINGS, EMBEDDING_SIZE,
-                                         AUGMENTER_PARAMS, DISTANCE, MAX_DISTANCE)
+                                         DISTANCE, MAX_DISTANCE)
 
 
 
@@ -52,6 +50,32 @@ class Classifier():
             torchvision.transforms.Normalize((0.4914, 0.4822, 0.4465),
                                              (0.2023, 0.1994, 0.2010))])
 
+    def load_exemplars(self, exemplars_paths):
+        "Add documentation."
+        if LOAD_EMBEDDINGS:
+            # Load embeddings and names of exemplars:
+            exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
+            mask = exemplars['brand'].isin(BRAND_LOGOS)
+            self.exemplars_vecs = list(exemplars['img_vec'][mask])
+            self.exemplars_brands = list(exemplars['brand'][mask])
+        else:
+            self.exemplars_vecs = []
+            self.exemplars_brands = []
+            for path in exemplars_paths:
+                brand = clean_name(path)
+                image = open_and_resize(path, IMAGE_RESIZE)
+
+                # Store clean image:
+                embedding = self.embed_image(image)
+                self.exemplars_vecs.append(embedding)
+                self.exemplars_brands.append(brand)
+
+                # Store augmented image:
+                for aug_image in get_augmentations(image):
+                    embedding = self.embed_image(aug_image)
+                    self.exemplars_vecs.append(embedding)
+                    self.exemplars_brands.append(brand)
+
     def set_classifier(self):
         "Add documentation."
         if DISTANCE.lower() == 'minkowski_1':
@@ -73,59 +97,8 @@ class Classifier():
         if len(detections['boxes']) != 0:
             image = Image.fromarray(image)
             detections = self.load_detections(image, detections)
-            return self.classify_embeddings(detections)
-        else:
-            return detections
-
-    def load_exemplars(self, exemplars_paths):
-        "Add documentation."
-        if LOAD_EMBEDDINGS:
-            # Load embeddings and names of exemplars:
-            exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
-            mask = exemplars['brand'].isin(BRAND_LOGOS)
-            self.exemplars_vecs = list(exemplars['img_vec'][mask])
-            self.exemplars_brands = list(exemplars['brand'][mask])
-        else:
-            self.exemplars_vecs = []
-            self.exemplars_brands = []
-            for path in exemplars_paths:
-                brand = clean_name(path)
-                image = open_and_resize(path, IMAGE_RESIZE)
-
-                embedding = self.embed_image(image)
-                self.exemplars_vecs.append(embedding)
-                self.exemplars_brands.append(brand)
-                for aug_image in self.get_augmentations(image):
-                    embedding = self.embed_image(aug_image)
-                    self.exemplars_vecs.append(embedding)
-                    self.exemplars_brands.append(brand)
-
-    def get_augmentations(self, image):
-        "Add documentation."
-        augmented_images = []
-        # For each combination:
-        for mu in AUGMENTER_PARAMS['Multiply']:
-            for gabl in AUGMENTER_PARAMS['GaussianBlur']:
-                for adga in AUGMENTER_PARAMS['AdditiveGaussianNoise']:
-                    for afsh in AUGMENTER_PARAMS['AffineShear']:
-                        for afro in AUGMENTER_PARAMS['AffineRotate']:
-                            # Process image:
-                            image_aug = self.augment_image(
-                                image, mu, gabl, adga, afsh, afro)
-                            augmented_images.append(image_aug)
-        return augmented_images
-
-    def augment_image(self, image, mu, gabl, adga, afsh, afro):
-        "Add documentation."
-        augmenter = ia.Sequential([
-            ia.Multiply(mul=mu),
-            ia.GaussianBlur(sigma=gabl),
-            ia.AdditiveGaussianNoise(scale=adga),
-            ia.Affine(rotate=afro, shear=afsh),
-        ])
-        # Process image:
-        image_arr = augmenter.augment_images(np.array(image))
-        return Image.fromarray(image_arr)
+            detections = self.classify_embeddings(detections)
+        return detections
 
     def load_detections(self, image, detections):
         "Add documentation."
