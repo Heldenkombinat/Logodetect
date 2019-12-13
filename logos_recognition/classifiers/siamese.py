@@ -15,8 +15,8 @@ from logos_recognition.augmenters.outdoors import get_augmentations
 from logos_recognition.utils import (clean_name, open_and_resize,
                                      image_to_gpu_tensor)
 from logos_recognition.constants import (CLASSIFIER_ALG, CLASSIFIER_DEVICE,
-                                         IMAGE_RESIZE, AUGMENTER_PARAMS,
-                                         MIN_CONFIDENCE)
+                                         CLASSIFIER_WEIGHTS, IMAGE_RESIZE,
+                                         AUGMENTER_PARAMS, MIN_CONFIDENCE)
 
 
 
@@ -32,7 +32,7 @@ class Classifier():
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
         self.classifier = classifiers.__dict__[
-            CLASSIFIER_ALG](CLASSIFIER_DEVICE)
+            CLASSIFIER_ALG](CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS)
 
     def load_exemplars(self, exemplars_paths):
         "Add documentation."
