@@ -90,10 +90,10 @@ class Classifier():
 
         for n_det in range(n_detections):
             a = n_det * n_logos
-            b = a + n_logos - 1
+            b = a + n_logos
             scores = comb_scores[a:b]
-
-            if scores.any() >= MIN_CONFIDENCE:
+            
+            if (scores >= MIN_CONFIDENCE).any():
                 detections['labels'][n_det] = np.argmax(scores)
                 detections['scores'][n_det] = np.max(scores)
                 selections[n_det] = True

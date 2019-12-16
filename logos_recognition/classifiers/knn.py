@@ -17,8 +17,8 @@ from logos_recognition.augmenters.outdoors import get_augmentations
 from logos_recognition.utils import (open_resize_and_load_gpu, open_and_resize,
                                      clean_name)
 from logos_recognition.constants import (CLASSIFIER_ALG, PATH_EXEMPLARS_EMBEDDINGS,
-                                         REPRESENTER_ALG, REPRESENTER_WEIGHTS,
-                                         REPRESENTER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
+                                         EMBEDDER_ALG, EMBEDDER_WEIGHTS,
+                                         EMBEDDER_DEVICE, BRAND_LOGOS, IMAGE_RESIZE,
                                          LOAD_EMBEDDINGS, EMBEDDING_SIZE,
                                          DISTANCE, MAX_DISTANCE)
 
@@ -37,7 +37,7 @@ class Classifier():
         self.transform = self.set_transform()
         # Set the network to perform image embeddings:
         self.representer = classifiers.__dict__[
-            REPRESENTER_ALG](REPRESENTER_DEVICE, REPRESENTER_WEIGHTS)
+            EMBEDDER_ALG](EMBEDDER_DEVICE, EMBEDDER_WEIGHTS)
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
         self.classifier = self.set_classifier()
@@ -114,7 +114,7 @@ class Classifier():
     def embed_image(self, image):
         "Add documentation."
         image = self.transform(image).unsqueeze(0).to(
-            REPRESENTER_DEVICE, dtype=torch.float)
+            EMBEDDER_DEVICE, dtype=torch.float)
         embedding = self.representer(image)
         embedding = nn_F.normalize(embedding, p=2, dim=1)
         return embedding.squeeze().detach().cpu().numpy()
