@@ -39,7 +39,7 @@ PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars_hq')
 DETECTOR = 'detectors.faster_rcnn'
 DETECTOR_ALG = 'binary_fasterrcnn_resnet50'
 DETECTOR_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'detector.pth')
-DETECTOR_DEVICE = 'cuda:2'
+DETECTOR_DEVICE = 'cuda:1'
 
 ##############
 # Classifier #
@@ -51,17 +51,18 @@ LOAD_EMBEDDINGS = False
 EXEMPLARS_FORMAT = 'jpg'
 
 # {siamese_resnet18}:
-REPRESENTER_ALG = 'siamese_resnet18'
-REPRESENTER_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'siamese_embedding.pth')
-REPRESENTER_DEVICE = 'cuda:2'
-REPRESENTER_IMG_SIZE = 100
+EMBEDDER_ALG = 'siamese_resnet18'
+EMBEDDER_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'embedder.pth')
+EMBEDDER_DEVICE = 'cuda:1'
+EMBEDDER_IMG_SIZE = 100
 
 # {classifiers.knn, classifiers.siamese}:
 CLASSIFIER = 'classifiers.siamese'
-# {KNeighborsClassifier, binary_stacked_resnet18}:
+# {KNeighborsClassifier, binary_stacked_resnet18, binary_stacked_resnet50}:
 CLASSIFIER_ALG = 'binary_stacked_resnet18'
-CLASSIFIER_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'classifier_500.pth')
-CLASSIFIER_DEVICE = 'cuda:2'
+# {classifier_resnet18.pth, classifier_resnet50.pth}:
+CLASSIFIER_WEIGHTS = os.path.join(PATH_GLOB, 'models', 'classifier_resnet18.pth')
+CLASSIFIER_DEVICE = 'cuda:1'
 
 EMBEDDING_SIZE = 345
 DISTANCE = 'cosine'  # {cosine, minkowski_1, minkowski_2}
