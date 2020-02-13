@@ -1,19 +1,16 @@
-# This file is used to prefetch the requirements to speed up docker builds.
-numpy
-scipy
-matplotlib
-moviepy
-opencv-python
-tqdm
-torch
-torchvision
-Cython
+Cython==0.29.15
+imgaug==0.4.0
+matplotlib==3.2.0rc3
+moviepy==1.0.1
+numpy==1.18.1
+opencv-python==4.2.0.32
+pandas==1.0.1
+scipy==1.4.1
+sklearn==0.22.1
+torch==1.4.0
+torchvision==0.5.0
+tqdm==4.42.1
+
+# To make VS code happy, not required for this package
 pylint
 autopep8
-sklearn
-pandas
-
-
-# Download compressed repositories to speedup installation.
-# Use tar.gz as .zip can fail with unicode filenames.
-https://github.com/aleju/imgaug/archive/master.tar.gz
