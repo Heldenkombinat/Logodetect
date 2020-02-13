@@ -8,7 +8,6 @@ from logos_recognition.recognizer import Recognizer
 from logos_recognition.constants import VIDEO_FILENAME, PATH_EXEMPLARS
 
 
-
 class App(object):
     "Add documentation."
 
@@ -24,13 +23,21 @@ class App(object):
 if __name__ == "__main__":
 
     # Set argument parser:
-    parser = argparse.ArgumentParser(description='One-shot object detector.')
-    parser.add_argument('-inp', '--video_filename', type=str,
-                        help='Filename of the video to process.',
-                        default=VIDEO_FILENAME)
-    parser.add_argument('-exm', '--exemplars_path', type=str,
-                        help='Directory of the exemplars to detect.',
-                        default=PATH_EXEMPLARS)
+    parser = argparse.ArgumentParser(description="One-shot object detector.")
+    parser.add_argument(
+        "-inp",
+        "--video_filename",
+        type=str,
+        help="Filename of the video to process.",
+        default=VIDEO_FILENAME,
+    )
+    parser.add_argument(
+        "-exm",
+        "--exemplars_path",
+        type=str,
+        help="Directory of the exemplars to detect.",
+        default=PATH_EXEMPLARS,
+    )
     args = parser.parse_args()
 
     # Create instance of application:
