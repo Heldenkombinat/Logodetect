@@ -23,6 +23,8 @@ setup(
         "torch>=1.4.0",
         "torchvision>=0.5.0",
         "tqdm>=4.42.1",
+        "black",
+        "pre-commit",
     ],
     packages=find_packages(),
     license="GNU AGPLv3",
