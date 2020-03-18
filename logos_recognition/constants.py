@@ -4,12 +4,11 @@
 import os
 
 
-##########
-# Global #
-##########
+PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
+PATH_DATA = os.path.join(PATH_GLOB, "data")
+PATH_VIDEO = os.path.join(PATH_DATA, "test_videos")
+PATH_MODELS = os.path.join(PATH_GLOB, "models")
 
-PATH_GLOB = os.path.join(os.environ["HKT"], "Logos-Recognition")
-PATH_DATA = os.path.join(os.environ["DATASETS"], "logos")
 IMAGE_RESIZE = (100, 100)
 MIN_CONFIDENCE = 0.9
 
@@ -17,17 +16,19 @@ MIN_CONFIDENCE = 0.9
 # Input video #
 ###############
 
-# VIDEO_FILENAME = os.path.join(PATH_GLOB, 'data', 'test_video.mp4')
-# BRAND_LOGOS = ['pepsi', 'redbull', 'heineken', 'stellaartois']
+SAMPLE_VIDEOS = ["test_video.mp4", "test_video_small.mp4", "football_redbull_small.mp4"]
+SAMPLE_BRANDS = [
+    ["pepsi", "redbull", "heineken", "stellaartois"],
+    ["pepsi"],
+    ["redbull"],
+]
+CHOICE = 1
 
-VIDEO_FILENAME = os.path.join(PATH_GLOB, "data", "test_video_small.mp4")
-BRAND_LOGOS = ["pepsi"]
+VIDEO_FILENAME = os.path.join(PATH_VIDEO, SAMPLE_VIDEOS[CHOICE])
+BRAND_LOGOS = SAMPLE_BRANDS[CHOICE]
 
-# VIDEO_FILENAME = os.path.join(PATH_GLOB, 'data', 'football_redbull_small.mp4')
-# BRAND_LOGOS = ['redbull']
-
-# PATH_EXEMPLARS = os.path.join(PATH_DATA, 'exemplars')
-PATH_EXEMPLARS = os.path.join(PATH_DATA, "exemplars_hq")
+EXEMPLARS = ["exemplars", "exemplars_100x100", "exemplars_100x100_aug", "exemplars_hq"]
+PATH_EXEMPLARS = os.path.join(PATH_DATA, EXEMPLARS[3])
 
 ############
 # Detector #
@@ -36,30 +37,28 @@ PATH_EXEMPLARS = os.path.join(PATH_DATA, "exemplars_hq")
 DETECTOR = "detectors.faster_rcnn"
 DETECTOR_ALG = "binary_fasterrcnn_resnet50"
 DETECTOR_WEIGHTS = os.path.join(PATH_GLOB, "models", "detector.pth")
-DETECTOR_DEVICE = "cuda:1"
 
 ##############
 # Classifier #
 ##############
 
 USE_CLASSIFIER = True
+
 PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, "exemplars_siamese.zip")
 LOAD_EMBEDDINGS = False
 EXEMPLARS_FORMAT = "jpg"
 
-# {siamese_resnet18}:
+# Keep embedder algorithm and weights as is
 EMBEDDER_ALG = "siamese_resnet18"
-EMBEDDER_WEIGHTS = os.path.join(PATH_GLOB, "models", "embedder.pth")
-EMBEDDER_DEVICE = "cuda:1"
+EMBEDDER_WEIGHTS = os.path.join(PATH_MODELS, "embedder.pth")
 EMBEDDER_IMG_SIZE = 100
 
-# {classifiers.knn, classifiers.siamese}:
+# choose between classifiers.knn and classifiers.siamese
 CLASSIFIER = "classifiers.siamese"
-# {KNeighborsClassifier, binary_stacked_resnet18, binary_stacked_resnet50}:
-CLASSIFIER_ALG = "binary_stacked_resnet18"
-# {classifier_resnet18.pth, classifier_resnet50.pth}:
-CLASSIFIER_WEIGHTS = os.path.join(PATH_GLOB, "models", "classifier_resnet18.pth")
-CLASSIFIER_DEVICE = "cuda:1"
+CLASSIFIER_ALG = "knn" if CLASSIFIER == "classifiers.knn" else "binary_stacked_resnet18"
+
+# TODO: currently only resnet18 seems to work, resnet50 throws a shape error
+CLASSIFIER_WEIGHTS = os.path.join(PATH_MODELS, "classifier_resnet18.pth")
 
 EMBEDDING_SIZE = 345
 DISTANCE = "cosine"  # {cosine, minkowski_1, minkowski_2}
@@ -76,3 +75,10 @@ AUGMENTER_PARAMS = {
     "AffineShear": [-25, 25],  # shear
     "AffineRotate": [-25, 25],  # rotate
 }
+
+
+# Device management
+DEVICE = "cpu"  # 'cuda:1' etc.
+EMBEDDER_DEVICE = DEVICE
+DETECTOR_DEVICE = DEVICE
+CLASSIFIER_DEVICE = DEVICE

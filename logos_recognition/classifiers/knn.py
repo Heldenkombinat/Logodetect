@@ -11,11 +11,9 @@ import torch
 from torch.nn import functional as nn_F
 import torchvision
 
-# Current library:
 from logos_recognition import classifiers
 from logos_recognition.augmenters.outdoors import get_augmentations
 from logos_recognition.utils import (
-    open_resize_and_load_gpu,
     open_and_resize,
     clean_name,
 )
@@ -40,20 +38,22 @@ class Classifier:
     def __init__(self, exemplar_paths):
         "Add documentation."
         # Define class variables:
-        self.exemplars_vecs = None
+        self.exemplars_vectors = None
         self.exemplars_brands = None
 
         # Set image transforms for inference:
         self.transform = self.set_transform()
         # Set the network to perform image embeddings:
-        self.representer = classifiers.__dict__[EMBEDDER_ALG](
+        self.representer = classifiers.get(EMBEDDER_ALG)(
             EMBEDDER_DEVICE, EMBEDDER_WEIGHTS
         )
+
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
         self.classifier = self.set_classifier()
 
-    def set_transform(self):
+    @staticmethod
+    def set_transform():
         "Add documentation."
         return torchvision.transforms.Compose(
             [
@@ -71,10 +71,10 @@ class Classifier:
             # Load embeddings and names of exemplars:
             exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
             mask = exemplars["brand"].isin(BRAND_LOGOS)
-            self.exemplars_vecs = list(exemplars["img_vec"][mask])
+            self.exemplars_vectors = list(exemplars["img_vec"][mask])
             self.exemplars_brands = list(exemplars["brand"][mask])
         else:
-            self.exemplars_vecs = []
+            self.exemplars_vectors = []
             self.exemplars_brands = []
             for path in exemplars_paths:
                 brand = clean_name(path)
@@ -82,31 +82,36 @@ class Classifier:
 
                 # Store clean image:
                 embedding = self.embed_image(image)
-                self.exemplars_vecs.append(embedding)
+                self.exemplars_vectors.append(embedding)
                 self.exemplars_brands.append(brand)
 
                 # Store augmented image:
                 for aug_image in get_augmentations(image):
                     embedding = self.embed_image(aug_image)
-                    self.exemplars_vecs.append(embedding)
+                    self.exemplars_vectors.append(embedding)
                     self.exemplars_brands.append(brand)
 
     def set_classifier(self):
         "Add documentation."
+        if CLASSIFIER_ALG is not "knn":
+            raise ValueError(
+                f"A classifiers.knn.Classifier can only be run with CLASSIFIER_ALG='knn', got {CLASSIFIER_ALG}."
+            )
         if DISTANCE.lower() == "minkowski_1":
-            model = classifiers.__dict__[CLASSIFIER_ALG](
+            model = classifiers.get(CLASSIFIER_ALG)(
                 n_neighbors=1, metric="minkowski", p="1"
             )
         elif DISTANCE.lower() == "minkowski_2":
-            model = classifiers.__dict__[CLASSIFIER_ALG](
+            model = classifiers.get(CLASSIFIER_ALG)(
                 n_neighbors=1, metric="minkowski", p="2"
             )
         elif DISTANCE.lower() == "cosine":
-            model = classifiers.__dict__[CLASSIFIER_ALG](n_neighbors=1, metric="cosine")
+            model = classifiers.get(CLASSIFIER_ALG)(n_neighbors=1, metric="cosine")
         else:
             print("{} is not a valid distance.".format(DISTANCE))
             sys.exit()
-        return model.fit(self.exemplars_vecs, self.exemplars_brands)
+        # TODO: code smell here, setting a classifier does not suggest training
+        return model.fit(self.exemplars_vectors, self.exemplars_brands)
 
     def predict(self, detections, image):
         "Add documentation."

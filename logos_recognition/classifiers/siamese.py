@@ -33,7 +33,7 @@ class Classifier:
 
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
-        self.classifier = classifiers.__dict__[CLASSIFIER_ALG](
+        self.classifier = classifiers.get(CLASSIFIER_ALG)(
             CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS
         )
 

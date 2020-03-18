@@ -11,21 +11,26 @@ from torchvision.transforms import functional as F
 
 
 def open_resize_and_load_gpu(path, device, image_resize):
-    "Add documentation."
-    # Load image and resize it:
+    """ Load image and resize it, then convert it
+    to a GPU tensor
+
+    :param path: file path
+    :param device: device string
+    :param image_resize: int
+    :return: resized gpu tensor
+    """
     image = open_and_resize(path, image_resize)
-    # Convert it to gpu tensor:
     return image_to_gpu_tensor(image, device)
 
 
 def open_and_resize(path, image_resize):
-    "Checks if image is valid and moves it to the GPU."
+    """Checks if image is valid and moves it to the GPU.
+    """
     return Image.open(path).convert("RGB").resize(image_resize)
 
 
 def image_to_gpu_tensor(image, device):
-    "Checks if image is valid and moves it to the GPU."
-    # Convert to numpy if input is PIL image:
+    """Checks if image is valid and moves it to the GPU."""
     if isinstance(image, Image.Image):
         image = np.array(image)
     if len(image.shape) != 3 or image.shape[2] != 3:
@@ -49,9 +54,9 @@ def clean_name(filename):
     return brand.encode("ascii", "replace").decode()
 
 
-def save_df(vectors, filenames, path, net_type=""):
+def save_df(vectors, file_names, path, net_type=""):
     vectors_list = [v for v in vectors]
-    brands = [clean_name(n) for n in filenames]
+    brands = [clean_name(n) for n in file_names]
     logos_df = pd.DataFrame({"brand": brands, "img_vec": vectors_list})
     # Save data:
     logos_df.to_pickle(path + "{}.zip".format(net_type))

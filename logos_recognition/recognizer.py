@@ -11,18 +11,14 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import cv2
 from moviepy.editor import VideoFileClip, AudioFileClip, ImageClip, concatenate
-from moviepy.audio.fx.volumex import volumex
-from PIL import Image
 
 # Current library:
-from logos_recognition.utils import clean_name, open_resize_and_load_gpu
+from logos_recognition.utils import clean_name
 from logos_recognition.constants import (
     DETECTOR,
     CLASSIFIER,
-    DETECTOR_DEVICE,
     USE_CLASSIFIER,
     BRAND_LOGOS,
-    IMAGE_RESIZE,
     EXEMPLARS_FORMAT,
 )
 

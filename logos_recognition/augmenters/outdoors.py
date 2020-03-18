@@ -17,7 +17,7 @@ def get_augmentations(image, params=AUGMENTER_PARAMS):
     :param params: dictionary of augmenter params.
     :return: list of augmented PIL.Image images
     """
-    param_product = list(itertools.product(*params.values()))
+    param_product = itertools.product(*params.values())
     return [augment_image(image, *param) for param in param_product]
 
 

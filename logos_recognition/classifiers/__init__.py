@@ -5,21 +5,49 @@ Input should always be exemplar ON TOP of detection, i.e.
     input[:3, :, :] is the detection and input[3:, :, :] is the exemplar
 """
 
-# Pip packages:
 import torch
 import torch.nn as nn
 import torchvision
 from sklearn.neighbors import KNeighborsClassifier
 
+ALL_ARCHITECTURES = [
+    "binary_stacked_resnet50",
+    "binary_stacked_resnet18",
+    "siamese_resnet18",
+    "knn",
+]
 
-def binary_stacked_resnet50(device, model_weights):
+
+def get(function_name):
+    """Get a model architecture by function name.
+
+    :param function_name: function name to call
+    :return: the function created from the name.
+    """
+    if function_name not in ALL_ARCHITECTURES:
+        raise ValueError(
+            f"{function_name} is not a valid model architecture, choose from {ALL_ARCHITECTURES}."
+        )
+    return globals()[f"_{function_name}"]
+
+
+def _knn(n_neighbors, metric, *args, **kwargs):
+    return KNeighborsClassifier(n_neighbors=n_neighbors, metric=metric, *args, **kwargs)
+
+
+def load_model_weights(model, device, model_weights):
+    checkpoint = torch.load(model_weights, map_location=device)
+    model.load_state_dict(checkpoint["model"])
+    return nn.Sequential(model, nn.Sigmoid())
+
+
+def _binary_stacked_resnet50(device, model_weights):
     """
     Creates a ResNet50 with a 6-channel input.
     """
     # Load standard architecture:
     model = torchvision.models.resnet50(pretrained=False)
 
-    # MODIFY ARCHITECTURE #
     # Get pre-trained weights of first layer:
     conv1_weight = model.conv1.weight
     # Duplicate array:
@@ -36,38 +64,24 @@ def binary_stacked_resnet50(device, model_weights):
     # Replace the final layer and add a sigmoid on top:
     model.fc = nn.Linear(model.fc.in_features, out_features=1, bias=True)
 
-    # LOAD WEIGHTS #
-    # Define the computing device explicitly:
-    checkpoint = torch.load(model_weights, map_location=device)
-    model.load_state_dict(checkpoint["model"])
-    model = nn.Sequential(model, nn.Sigmoid())
+    model = load_model_weights(model, device, model_weights)
 
     return model.eval().to(device)
 
 
-def binary_stacked_resnet18(device, model_weights):
+def _binary_stacked_resnet18(device, model_weights):
     """
     Creates a ResNet18 with a 6-channel input.
     """
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
-    return load_binary_stacked_net(model, device, model_weights)
+    return _load_binary_stacked_net(model, device, model_weights)
 
 
-# def binary_stacked_resnet50(device, model_weights):
-#     '''
-#     Creates a ResNet50 with a 6-channel input.
-#     '''
-#     # Load standard architecture:
-#     model = torchvision.models.resnet50(pretrained=False)
-#     return load_binary_stacked_net(model, device, model_weights)
-
-
-def load_binary_stacked_net(model, device, model_weights):
+def _load_binary_stacked_net(model, device, model_weights):
     """
     Creates a ResNet18 with a 6-channel input.
     """
-    # MODIFY ARCHITECTURE #
     # Replace the 3-channel input with 6-channel input:
     model.conv1 = nn.Conv2d(
         6, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
@@ -75,28 +89,20 @@ def load_binary_stacked_net(model, device, model_weights):
     # Replace the final layer and add a sigmoid on top:
     model.fc = nn.Linear(model.fc.in_features, out_features=1, bias=True)
 
-    # LOAD WEIGHTS #
-    # Define the computing device explicitly:
-    checkpoint = torch.load(model_weights, map_location=device)
-    model.load_state_dict(checkpoint["model"])
-    model = nn.Sequential(model, nn.Sigmoid())
-
+    model = load_model_weights(model, device, model_weights)
     return model.eval().to(device)
 
 
-def siamese_resnet18(device, model_weights, model_out=345):
+def _siamese_resnet18(device, model_weights, model_out=345):
     """
     Loads a pre-trained ResNet18 for Siamese network.
     """
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
 
-    # MODIFY ARCHITECTURE #
     # Replace the final layer:
     model.fc = nn.Linear(model.fc.in_features, model_out)
 
-    # LOAD WEIGHTS #
-    # Define the computing device explicitly:
     checkpoint = torch.load(model_weights, map_location=device)
     model.load_state_dict(checkpoint["state_dict"])
 
