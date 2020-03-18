@@ -1,41 +1,44 @@
-"Augmentations for outdoor environments."
+"""Augmentations for outdoor environments.
+"""
 
-# Pip packages:
+import itertools
 import numpy as np
 from PIL import Image
+from imgaug import augmenters
 
-# Github packages:
-import imgaug.augmenters as ia
-
-# Current library:
 from logos_recognition.constants import AUGMENTER_PARAMS
 
 
-def get_augmentations(image):
-    "Add documentation."
-    augmented_images = []
-    # For each combination:
-    for mu in AUGMENTER_PARAMS["Multiply"]:
-        for gabl in AUGMENTER_PARAMS["GaussianBlur"]:
-            for adga in AUGMENTER_PARAMS["AdditiveGaussianNoise"]:
-                for afsh in AUGMENTER_PARAMS["AffineShear"]:
-                    for afro in AUGMENTER_PARAMS["AffineRotate"]:
-                        # Process image:
-                        image_aug = augment_image(image, mu, gabl, adga, afsh, afro)
-                        augmented_images.append(image_aug)
-    return augmented_images
+def get_augmentations(image, params=AUGMENTER_PARAMS):
+    """Get a list of augmented images for an image,
+    according to the specified augmentation
+
+    :param image: a PIL.Image instance
+    :param params: dictionary of augmenter params.
+    :return: list of augmented PIL.Image images
+    """
+    param_product = list(itertools.product(*params.values()))
+    return [augment_image(image, *param) for param in param_product]
 
 
-def augment_image(image, mu, gabl, adga, afsh, afro):
-    "Add documentation."
-    augmenter = ia.Sequential(
+def augment_image(image, mu, sigma, scale, shear, rotate):
+    """Augment an image using the 'imgaug' library.
+
+    :param image: a PIL.image instance
+    :param mu: Gaussian blur mu
+    :param sigma: Gaussian blur sigma
+    :param scale: Additive Gaussian noise
+    :param shear: Affine shear
+    :param rotate: Affine rotation
+    :return: Augmented PIL.Image
+    """
+    augmenter = augmenters.Sequential(
         [
-            ia.Multiply(mul=mu),
-            ia.GaussianBlur(sigma=gabl),
-            ia.AdditiveGaussianNoise(scale=adga),
-            ia.Affine(rotate=afro, shear=afsh),
+            augmenters.Multiply(mul=mu),
+            augmenters.GaussianBlur(sigma=sigma),
+            augmenters.AdditiveGaussianNoise(scale=scale),
+            augmenters.Affine(rotate=rotate, shear=shear),
         ]
     )
-    # Process image:
     image_arr = augmenter.augment_images(np.array(image))
     return Image.fromarray(image_arr)

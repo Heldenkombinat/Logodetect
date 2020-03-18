@@ -1,10 +1,7 @@
-"Constants for logos recognition."
+"""Constants for logos recognition.
+"""
 
-# Standard library:
 import os
-
-# Pip packages:
-import torch
 
 
 ##########
@@ -73,9 +70,9 @@ MAX_DISTANCE = 0.010  # {siamese-cosine: 0.013}
 #############
 
 AUGMENTER_PARAMS = {
-    "Multiply": [0.5, 1.5],
-    "GaussianBlur": [0.4],
-    "AdditiveGaussianNoise": [0.2 * 255],
-    "AffineShear": [-25, 25],
-    "AffineRotate": [-25, 25],
+    "Multiply": [0.5, 1.5],  # mu
+    "GaussianBlur": [0.4],  # sigma
+    "AdditiveGaussianNoise": [0.2 * 255],  # scale
+    "AffineShear": [-25, 25],  # shear
+    "AffineRotate": [-25, 25],  # rotate
 }

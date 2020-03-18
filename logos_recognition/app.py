@@ -1,28 +1,13 @@
-"Top module for client-specific application."
+"""Top module for client-specific application.
+"""
 
-# Standard library:
 import argparse
-
-# Current library:
 from logos_recognition.recognizer import Recognizer
 from logos_recognition.constants import VIDEO_FILENAME, PATH_EXEMPLARS
 
 
-class App(object):
-    "Add documentation."
-
-    def __init__(self, exemplars_path):
-        "Add documentation."
-        self.recognizer = Recognizer(exemplars_path)
-
-    def run(self, video_filename):
-        "Add documentation."
-        self.recognizer.predict(video_filename)
-
-
 if __name__ == "__main__":
 
-    # Set argument parser:
     parser = argparse.ArgumentParser(description="One-shot object detector.")
     parser.add_argument(
         "-inp",
@@ -40,8 +25,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Create instance of application:
-    APP = App(args.exemplars_path)
-
-    # Process video:
-    APP.run(args.video_filename)
+    app = Recognizer(args.exemplars_path)
+    app.predict(args.video_filename)

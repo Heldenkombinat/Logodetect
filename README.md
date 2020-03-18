@@ -14,10 +14,13 @@ conda activate test
 
 ## Usage
 
-Friendly reminder: always use virtual environments! Otherwise replace `python` with `python3`.
+TODO: when installing the library, download and unzip models and videos automatically
 
-- Download data and models from the [Google Drive folder](https://drive.google.com/drive/u/1/folders/12CQkp3K4QdzfNRtsLjkc_iqbT-IZVwAq)
-- Run test case with `python Logos-Recognition/logos_recognition/app.py`
+Videos: https://drive.google.com/a/heldenkombinat.com/file/d/1Htp0qGsp2IufaeVSQe40iBaroDtlbIbJ/view?usp=sharing
+
+
+Download data and models from the [Google Drive folder](https://drive.google.com/a/heldenkombinat.com/file/d/17yi4J8YFRSkdsUOMpqpBgMGnqOjvugnq/view?usp=sharing)
+- Run test case with `python logos_recognition/app.py`
 - By default, output video will be saved as `Logos-Recognition/data/test_video_output.mp4`
 
 ## Automatic code linting with `black`

@@ -18,7 +18,6 @@ from logos_recognition.constants import (
     CLASSIFIER_DEVICE,
     CLASSIFIER_WEIGHTS,
     IMAGE_RESIZE,
-    AUGMENTER_PARAMS,
     MIN_CONFIDENCE,
 )
 
