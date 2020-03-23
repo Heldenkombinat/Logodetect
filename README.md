@@ -1,5 +1,3 @@
-# Logo recognition
-
 <p align="center">
   <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/hkt_logo_detect.png">
 </p>
