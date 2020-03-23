@@ -1,5 +1,11 @@
 # Logo recognition
 
+<p align="center">
+  <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/hkt_logo_detect.png">
+</p>
+
+---
+
 ## Installation
 
 - (Optional) Create a new virtual environment and activate it:
@@ -34,6 +40,30 @@ pre-commit install
 
 from the base of this repository. This will run (and fail in case of grave errors) black each time you make a commit. Once CI is up for this project, we will ensure this hook runs on each CI pass. To manually use `black` 
 on a file, use `black <path-to-file>`.
+
+## Running tests
+
+Run all tests with `pytest`, or just run the quicker unit test suite with 
+
+```bash_script
+pytest -m unit
+```
+
+or all longer-running integration tests with
+
+```bash_script
+pytest -m integration
+```
+
+## Modules and concepts
+
+### Recognizer
+
+### Classifier
+
+### Detector
+
+### Augmenter
 
 ## Current capabilities
 
