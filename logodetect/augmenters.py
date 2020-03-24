@@ -9,7 +9,7 @@ from imgaug import augmenters
 from logodetect.constants import AUGMENTER_PARAMS
 
 
-def get_augmentations(image, params=AUGMENTER_PARAMS):
+def get_augmentations(image: Image.Image, params: dict = AUGMENTER_PARAMS) -> list:
     """Get a list of augmented images for an image,
     according to the specified augmentation
 
@@ -21,7 +21,9 @@ def get_augmentations(image, params=AUGMENTER_PARAMS):
     return [augment_image(image, *param) for param in param_product]
 
 
-def augment_image(image, mu, sigma, scale, shear, rotate):
+def augment_image(
+    image: Image.Image, mu: float, sigma: float, scale: float, shear: int, rotate: int
+) -> Image.Image:
     """Augment an image using the 'imgaug' library.
 
     :param image: a PIL.image instance

@@ -12,7 +12,7 @@ ALL_ARCHITECTURES = [
 ]
 
 
-def get(function_name):
+def get(function_name: str):
     """Get a model architecture by function name.
 
     :param function_name: function name to call
@@ -25,21 +25,19 @@ def get(function_name):
     return globals()[f"_{function_name}"]
 
 
-def _fasterrcnn_resnet50(device, model_weights=None):
+def _fasterrcnn_resnet50(device: str, model_weights: str = None):
     """Creates a FasterRCNN with a ResNet50 backbone.
     """
     model = fasterrcnn_resnet50_fpn()
 
     if model_weights:
-        # Define the computing device explicitly:
-        # checkpoint = torch.load(model_weights, map_location=device)
-        checkpoint = torch.load(model_weights)
+        checkpoint = torch.load(model_weights, map_location=device)
         model.load_state_dict(checkpoint["state_dict"])
 
     return model.eval().to(device)
 
 
-def _binary_fasterrcnn_resnet50(device, model_weights):
+def _binary_fasterrcnn_resnet50(device: str, model_weights: str):
     """Loads a pre-trained FasterRCNN with a ResNet50 backbone and 2-class output.
     """
     model = fasterrcnn_resnet50_fpn()

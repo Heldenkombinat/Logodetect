@@ -32,7 +32,7 @@ class Classifier:
     """KNN Classifier
     """
 
-    def __init__(self, exemplar_paths):
+    def __init__(self, exemplar_paths: str) -> None:
 
         self.transform = self._compute_transform()
         self.embedder = classifiers.get(EMBEDDER_ALG)(EMBEDDER_DEVICE, EMBEDDER_WEIGHTS)
@@ -55,7 +55,7 @@ class Classifier:
             ]
         )
 
-    def _load_exemplars(self, exemplars_paths):
+    def _load_exemplars(self, exemplars_paths: str) -> None:
         """Load exemplars from file
 
         :param exemplars_paths: path to exemplars folder
@@ -111,7 +111,7 @@ class Classifier:
         # TODO: code smell here, setting a classifier does not suggest training (or returning anything)
         return model.fit(self.exemplars_vectors, self.exemplars_brands)
 
-    def predict(self, detections: dict, image: np.ndarray):
+    def predict(self, detections: dict, image: np.ndarray) -> dict:
         """Classify an image given precomputed detection objects
 
         :param detections: detections dictionary with overlay boxes
@@ -154,7 +154,7 @@ class Classifier:
         normalized_embedding = functional.normalize(embedding, p=2, dim=1)
         return normalized_embedding.squeeze().detach().cpu().numpy()
 
-    def classify_embeddings(self, detections):
+    def classify_embeddings(self, detections: dict) -> dict:
         """Use the classifier algorithm to predict classes of
         the given detections.
 

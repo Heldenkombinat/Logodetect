@@ -68,7 +68,7 @@ def clean_name(filename: str) -> str:
     return brand.encode("ascii", "replace").decode()
 
 
-def save_df(vectors, file_names, path, net_type=""):
+def save_df(vectors, file_names, path, net_type="") -> None:
     """Save image vectors and brands stored in file
     names as pandas DataFrame.
     TODO: needs clarification.

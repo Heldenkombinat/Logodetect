@@ -28,9 +28,12 @@ class Recognizer(object):
     """Recognizer
 
     The Recognizer is the main class for detecting and recognizing logos.
+    First, we detect potential overlay boxes in video frames or images. Then,
+    if a classifier algorithm has been specified, the detected boxes get labeled
+    accordingly and the result is stored as output file.
     """
 
-    def __init__(self, exemplars_path: str):
+    def __init__(self, exemplars_path: str) -> None:
         self.video = None
         self.audio = None
         self.frame_duration = None
@@ -93,7 +96,9 @@ class Recognizer(object):
         predicted_image = self.draw_overlay_boxes(image, recognitions[0])
         self.save_image(predicted_image, image_filename, output_appendix)
 
-    def compute_recognitions(self, frame: np.ndarray, recognitions: list = None):
+    def compute_recognitions(
+        self, frame: np.ndarray, recognitions: list = None
+    ) -> list:
         """Compute new recognitions for this frame and returns the augmented list.
 
         :param frame: current frame
@@ -110,7 +115,7 @@ class Recognizer(object):
             recognitions.append(detections)
         return recognitions
 
-    def set_video_source(self, video_filename) -> None:
+    def set_video_source(self, video_filename: str) -> None:
         """Set all video related properties for the specified video
 
         :param video_filename: file name of the video to process
@@ -142,7 +147,7 @@ class Recognizer(object):
             all_frames.append(new_frame)
         return concatenate_videoclips(all_frames)
 
-    def draw_overlay_boxes(self, image, recognition: dict):
+    def draw_overlay_boxes(self, image: np.ndarray, recognition: dict) -> np.ndarray:
         """If there a recognitions for this image, draw overlay
         boxes and text on the image.
 
@@ -186,7 +191,7 @@ class Recognizer(object):
 
     def save_video(
         self, video: VideoClip, video_filename: str, output_appendix: str = "_output"
-    ):
+    ) -> None:
         """Save the resulting video.
 
         :param video: the processed VideoClip

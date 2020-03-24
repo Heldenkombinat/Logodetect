@@ -18,7 +18,7 @@ ALL_ARCHITECTURES = [
 ]
 
 
-def get(function_name):
+def get(function_name: str):
     """Get a model architecture by function name.
 
     :param function_name: function name to call
@@ -31,21 +31,20 @@ def get(function_name):
     return globals()[f"_{function_name}"]
 
 
-def _knn(n_neighbors, metric, *args, **kwargs):
+def _knn(n_neighbors, metric, *args, **kwargs) -> KNeighborsClassifier:
     return KNeighborsClassifier(n_neighbors=n_neighbors, metric=metric, *args, **kwargs)
 
 
-def load_model_weights(model, device, model_weights):
+def load_model_weights(model, device: str, model_weights: str) -> nn.Sequential:
     checkpoint = torch.load(model_weights, map_location=device)
     model.load_state_dict(checkpoint["model"])
     return nn.Sequential(model, nn.Sigmoid())
 
 
-def _binary_stacked_resnet50(device, model_weights):
+def _binary_stacked_resnet50(device: str, model_weights: str):
+    """Creates a ResNet50 with a 6-channel input.
     """
-    Creates a ResNet50 with a 6-channel input.
-    """
-    # Load standard architecture:
+    # Load standard, built-in ResNet 50 architecture:
     model = torchvision.models.resnet50(pretrained=False)
 
     # Get pre-trained weights of first layer:
@@ -69,18 +68,16 @@ def _binary_stacked_resnet50(device, model_weights):
     return model.eval().to(device)
 
 
-def _binary_stacked_resnet18(device, model_weights):
-    """
-    Creates a ResNet18 with a 6-channel input.
+def _binary_stacked_resnet18(device: str, model_weights: str):
+    """Creates a ResNet18 with a 6-channel input.
     """
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
     return _load_binary_stacked_net(model, device, model_weights)
 
 
-def _load_binary_stacked_net(model, device, model_weights):
-    """
-    Creates a ResNet18 with a 6-channel input.
+def _load_binary_stacked_net(model, device: str, model_weights: str):
+    """Creates a ResNet18 with a 6-channel input.
     """
     # Replace the 3-channel input with 6-channel input:
     model.conv1 = nn.Conv2d(
@@ -93,9 +90,8 @@ def _load_binary_stacked_net(model, device, model_weights):
     return model.eval().to(device)
 
 
-def _siamese_resnet18(device, model_weights, model_out=345):
-    """
-    Loads a pre-trained ResNet18 for Siamese network.
+def _siamese_resnet18(device: str, model_weights: str, model_out: int = 345):
+    """Loads a pre-trained ResNet18 for Siamese network.
     """
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
