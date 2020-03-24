@@ -26,9 +26,10 @@ SAMPLE_VIDEOS = [
 SAMPLE_BRANDS = [
     ["pepsi", "redbull", "heineken", "stellaartois"],
     ["pepsi"],
+    ["pepsi"],
     ["redbull"],
 ]
-CHOICE = 2
+CHOICE = 0
 
 VIDEO_FILENAME = os.path.join(PATH_VIDEO, SAMPLE_VIDEOS[CHOICE])
 IMAGE_FILENAME = os.path.join(PATH_IMAGE, "test_image_small.png")

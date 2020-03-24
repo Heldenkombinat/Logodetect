@@ -24,8 +24,6 @@ setup(
         "torch>=1.4.0",
         "torchvision>=0.5.0",
         "tqdm>=4.42.1",
-        "black",
-        "pre-commit",
     ],
     extras_require={
         "tests": ["pytest", "pytest-pep8", "pytest-cov", "mock"],
