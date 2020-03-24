@@ -1,10 +1,10 @@
 Cython==0.29.15
 imgaug==0.4.0
-matplotlib==3.2.0rc3
+matplotlib>=2.2.5
 moviepy==1.0.1
-numpy==1.18.1
+numpy==1.18.2
 opencv-python==4.2.0.32
-pandas==1.0.1
+pandas==1.0.3
 scipy==1.4.1
 scikit-learn==0.22.1
 torch==1.4.0
