@@ -33,11 +33,21 @@ class Recognizer(object):
     accordingly and the result is stored as output file.
     """
 
-    def __init__(self, exemplars_path: str) -> None:
+    def __init__(self, exemplars_path: str = None) -> None:
         self.video = None
         self.audio = None
         self.frame_duration = None
         self.total_frames = None
+        if exemplars_path:
+            self.set_exemplars(exemplars_path)
+
+        self.detector = import_module(f"logodetect.{DETECTOR}").Detector()
+        if USE_CLASSIFIER:
+            self.classifier = import_module(
+                f"logodetect.classifiers.{CLASSIFIER}"
+            ).Classifier(self.exemplar_paths)
+
+    def set_exemplars(self, exemplars_path: str) -> None:
         self.exemplars_path = exemplars_path
         all_paths = glob.glob(
             os.path.join(self.exemplars_path, "*.{}".format(EXEMPLARS_FORMAT))
@@ -49,11 +59,6 @@ class Recognizer(object):
             set([clean_name(path) for path in self.exemplar_paths])
         )
         self.cmap = plt.cm.get_cmap("jet", len(self.exemplars_set))
-        self.detector = import_module(f"logodetect.{DETECTOR}").Detector()
-        if USE_CLASSIFIER:
-            self.classifier = import_module(
-                f"logodetect.classifiers.{CLASSIFIER}"
-            ).Classifier(self.exemplar_paths)
 
     def predict(self, video_filename: str, output_appendix: str = "_output") -> None:
         """ Predict recognitions, which will come in the following form:
@@ -182,10 +187,7 @@ class Recognizer(object):
         :param output_appendix: appendix to add to file
         :return: None
         """
-        name, extension = os.path.splitext(image_filename)
-        output_filename = image_filename.replace(
-            extension, f"{output_appendix}{extension}"
-        )
+        output_filename = append_to_file_name(image_filename, output_appendix)
         print(f"Saved resulting image as {output_filename}.")
         cv2.imwrite(output_filename, image)
 
@@ -199,10 +201,7 @@ class Recognizer(object):
         :param output_appendix: appendix to add to file
         :return: None
         """
-        name, extension = os.path.splitext(video_filename)
-        output_filename = video_filename.replace(
-            extension, f"{output_appendix}{extension}"
-        )
+        output_filename = append_to_file_name(video_filename, output_appendix)
         video.set_audio(self.audio)
         video.write_videofile(
             output_filename,
@@ -212,3 +211,8 @@ class Recognizer(object):
             remove_temp=True,
             fps=self.video.fps,
         )
+
+
+def append_to_file_name(video_filename: str, output_appendix: str) -> str:
+    name, extension = os.path.splitext(video_filename)
+    return video_filename.replace(extension, f"{output_appendix}{extension}")

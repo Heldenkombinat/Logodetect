@@ -133,10 +133,8 @@ class Classifier:
         """
         detections_mat = np.zeros((len(detections["boxes"]), EMBEDDING_SIZE))
         for idx, box in enumerate(detections["boxes"]):
-            # TODO: this seems odd, we override the input image here and crop it to the first found box
-            #  how does this not influence the rest of the predictions?
-            image = image.crop(box).resize(IMAGE_RESIZE)
-            embedding = self.embed_image(image)
+            crop_image = image.crop(box).resize(IMAGE_RESIZE)
+            embedding = self.embed_image(crop_image)
             detections_mat[idx, :] = embedding
         detections["embeddings"] = detections_mat
         return detections

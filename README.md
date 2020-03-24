@@ -49,6 +49,15 @@ for custom video data with custom exemplars, you should use
 logodetect video -v <path-to-video> -e <path-to-exemplars-folder>
 ```
 
+## Docker support
+
+If you prefer docker, build an image and run it like this:
+
+```bash_script
+docker build . -t logodetect
+docker run -e LOGOS_RECOGNITION=/app -p 5000:5000 -t logodetect
+```
+
 ## Automatic code linting with `black`
 
 This project uses `black` for code linting. To install the git pre-commit hook for `black`,
