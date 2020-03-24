@@ -5,7 +5,11 @@
 ---
 
 `logodetect` is a one-shot detection library to find logos of any kind in video and image data. Go check out
-[our demo if you want to see it in action right away.](https://logodetect.netlify.com/demo/)
+[our demo if you want to see it in action right away.](https://logodetect.netlify.com/)
+
+Here's a quick example of live football footage that can detect the logos on jerseys and the sports fields.
+
+![one-shot logo detection on video footage](demo.gif)
 
 ## Installation
 
