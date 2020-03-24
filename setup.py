@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-    name="logodetection",
+    name="logodetect",
     version="0.1",
     description="One-shot logo detection for videos and images.",
     long_description="One-shot logo detection for videos and images.",
@@ -12,6 +12,7 @@ setup(
     author_email="jorge@heldenkombinat.com",
     install_requires=[
         "Cython>=0.29.15",
+        "click>=7.1.1",
         "imgaug>=0.4.0",
         "matplotlib>=3.2.0rc3",
         "moviepy>=1.0.1",
@@ -26,6 +27,11 @@ setup(
         "black",
         "pre-commit",
     ],
+    extras_require={
+        "tests": ["pytest", "pytest-pep8", "pytest-cov", "mock"],
+        "dev": ["black", "pre-commit"],
+    },
+    entry_points={"console_scripts": ["logodetect=logodetect.cli:cli"]},
     packages=find_packages(),
     license="GNU AGPLv3",
     zip_safe=False,

@@ -1,30 +1,26 @@
 "Classifier module."
 
-# Standard library:
-import os
-import sys
-
 # Pip packages:
 import numpy as np
 from PIL import Image
 import torch
 
 # Current library:
-from logos_recognition import classifiers
-from logos_recognition.augmenters.outdoors import get_augmentations
-from logos_recognition.utils import clean_name, open_and_resize, image_to_gpu_tensor
-from logos_recognition.constants import (
+from logodetect import classifiers
+from logodetect.augmenters import get_augmentations
+from logodetect.utils import clean_name, open_and_resize, image_to_gpu_tensor
+from logodetect.constants import (
     CLASSIFIER_ALG,
     CLASSIFIER_DEVICE,
     CLASSIFIER_WEIGHTS,
     IMAGE_RESIZE,
-    AUGMENTER_PARAMS,
     MIN_CONFIDENCE,
 )
 
 
 class Classifier:
-    "Add documentation."
+    """Siamese Network classifier.
+    """
 
     def __init__(self, exemplar_paths):
         "Add documentation."
@@ -34,7 +30,7 @@ class Classifier:
 
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
-        self.classifier = classifiers.__dict__[CLASSIFIER_ALG](
+        self.classifier = classifiers.get(CLASSIFIER_ALG)(
             CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS
         )
 
@@ -75,12 +71,10 @@ class Classifier:
         """
         comb_images = []
         for box in detections["boxes"]:
-            # Extract the detection from the image:
             crop = image.crop(box).resize(IMAGE_RESIZE)
             detection = image_to_gpu_tensor(crop, CLASSIFIER_DEVICE)
 
             for exemplar in self.exemplars_imgs:
-                # Concatenate with the exemplar:
                 comb_images.append(torch.cat((detection, exemplar), 1))
 
         return torch.cat(comb_images).to(CLASSIFIER_DEVICE)
@@ -105,8 +99,14 @@ class Classifier:
         detections["brands"] = np.array(brands)
         return self._select_detections(detections, selections)
 
-    def _select_detections(self, detections, selections):
-        "Add documentation."
+    @staticmethod
+    def _select_detections(detections, selections):
+        """Specify detections for the given selections.
+
+        :param detections:
+        :param selections:
+        :return:
+        """
         detections["boxes"] = detections["boxes"][selections]
         detections["labels"] = detections["labels"][selections]
         detections["scores"] = detections["scores"][selections]

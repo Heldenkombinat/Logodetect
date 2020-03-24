@@ -8,9 +8,9 @@ import numpy as np
 import torch
 
 # Current library:
-from logos_recognition import detectors
-from logos_recognition.utils import image_to_gpu_tensor
-from logos_recognition.constants import (
+from logodetect import detectors
+from logodetect.utils import image_to_gpu_tensor
+from logodetect.constants import (
     DETECTOR_DEVICE,
     DETECTOR_ALG,
     DETECTOR_WEIGHTS,
@@ -22,8 +22,8 @@ class Detector:
     "Add documentation."
 
     def __init__(self):
-        "Add documentation."
-        self.model = detectors.__dict__[DETECTOR_ALG](DETECTOR_DEVICE, DETECTOR_WEIGHTS)
+        model = detectors.get(DETECTOR_ALG)
+        self.model = model(DETECTOR_DEVICE, DETECTOR_WEIGHTS)
 
     @torch.no_grad()
     def predict(self, image):
