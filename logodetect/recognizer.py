@@ -15,7 +15,7 @@ from moviepy.editor import (
 )
 
 from logodetect.utils import clean_name
-from logodetect.constants import (
+from constants import (
     DETECTOR,
     CLASSIFIER,
     USE_CLASSIFIER,

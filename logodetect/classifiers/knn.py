@@ -13,7 +13,7 @@ from logodetect.utils import (
     open_and_resize,
     clean_name,
 )
-from logodetect.constants import (
+from constants import (
     CLASSIFIER_ALG,
     PATH_EXEMPLARS_EMBEDDINGS,
     EMBEDDER_ALG,

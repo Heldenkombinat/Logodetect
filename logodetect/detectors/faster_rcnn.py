@@ -1,4 +1,4 @@
-"Detector module."
+"""Detector module."""
 
 # Standard library:
 import os
@@ -10,7 +10,7 @@ import torch
 # Current library:
 from logodetect import detectors
 from logodetect.utils import image_to_gpu_tensor
-from logodetect.constants import (
+from constants import (
     DETECTOR_DEVICE,
     DETECTOR_ALG,
     DETECTOR_WEIGHTS,

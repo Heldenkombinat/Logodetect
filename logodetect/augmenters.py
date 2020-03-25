@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 from imgaug import augmenters
 
-from logodetect.constants import AUGMENTER_PARAMS
+from constants import AUGMENTER_PARAMS
 
 
 def get_augmentations(image: Image.Image, params: dict = AUGMENTER_PARAMS) -> list:
