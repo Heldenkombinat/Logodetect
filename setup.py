@@ -37,7 +37,6 @@ setup(
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Environment :: Console",
-        "License :: OSI Approved :: GNU Affero General Public License v3.0",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
