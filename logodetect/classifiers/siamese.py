@@ -1,4 +1,4 @@
-"Classifier module."
+"""Classifier module."""
 
 # Pip packages:
 import numpy as np
@@ -9,7 +9,7 @@ import torch
 from logodetect import classifiers
 from logodetect.augmenters import get_augmentations
 from logodetect.utils import clean_name, open_and_resize, image_to_gpu_tensor
-from logodetect.constants import (
+from constants import (
     CLASSIFIER_ALG,
     CLASSIFIER_DEVICE,
     CLASSIFIER_WEIGHTS,

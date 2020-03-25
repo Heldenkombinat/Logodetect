@@ -1,7 +1,5 @@
-"Collection of models for detection."
+"""Collection of models for detection."""
 from .faster_rcnn import *
-
-# Pip packages:
 import torch
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor

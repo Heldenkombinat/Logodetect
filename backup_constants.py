@@ -4,7 +4,10 @@
 import os
 
 
-PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
+if "LOGOS_RECOGNITION" in os.environ:
+    PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
+else:
+    PATH_GLOB = os.path.expanduser("~/.hkt/logodetect")
 PATH_DATA = os.path.join(PATH_GLOB, "data")
 PATH_VIDEO = os.path.join(PATH_DATA, "test_videos")
 PATH_IMAGE = os.path.join(PATH_DATA, "test_images")

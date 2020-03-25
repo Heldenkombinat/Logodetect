@@ -9,14 +9,19 @@ from flask import (
     after_this_request,
 )
 from werkzeug.utils import secure_filename
-from logodetect import Recognizer, PATH_DATA
-from logodetect.recognizer import append_to_file_name
+import backup_constants as constants
+from logodetect.recognizer import append_to_file_name, Recognizer
+from flask_cors import CORS, cross_origin
 
-PATH_EXEMPLARS = os.path.join(PATH_DATA, "exemplars_100x100_aug")
+
+PATH_EXEMPLARS = os.path.join(constants.PATH_DATA, "exemplars_100x100_aug")
 UPLOAD_FOLDER = "."
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__)
+app.secret_key = "logodetect key"
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 RECOGNIZER = Recognizer(exemplars_path=PATH_EXEMPLARS)
@@ -43,14 +48,14 @@ def predict_image():
         if "image" not in request.files:
             flash("No file part")
             return redirect(request.url)
-        file = request.files["image"]
-        if file.filename == "":
+        image = request.files["image"]
+        if image.filename == "":
             flash("No selected file")
             return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+        if image and allowed_file(image.filename):
+            filename = secure_filename(image.filename)
             local_file = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            file.save(local_file)
+            image.save(local_file)
             RECOGNIZER.predict_image(local_file)
             os.remove(local_file)
             prediction = append_to_file_name(filename, "_output")
@@ -86,4 +91,5 @@ def processed_image(image: str):
 
 
 if __name__ == "__main__":
+    # app.debug = True
     app.run(host="0.0.0.0")
