@@ -1,0 +1,4 @@
+runtime: python37
+
+env_variables:
+  LOGOS_RECOGNITION: "./"
