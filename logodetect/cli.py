@@ -18,7 +18,7 @@ out = partial(click.secho, bold=True, err=True)
 if "LOGOS_RECOGNITION" in os.environ:
     BASE_PATH = os.environ["LOGOS_RECOGNITION"]
 else:
-    BASE_PATH = os.path.expanduser("~/.hkt/logodetect")
+    BASE_PATH = os.path.expanduser(os.path.join('~', '.hkt', 'logodetect'))
 DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
 
@@ -128,6 +128,6 @@ def cli():
     pass
 
 
+cli.add_command(init)
 cli.add_command(image)
 cli.add_command(video)
-cli.add_command(init)
