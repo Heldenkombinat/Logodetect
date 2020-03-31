@@ -27,7 +27,7 @@ if LOCAL:
     print("applying CORS headers")
     from flask_cors import CORS, cross_origin
 
-    cors = CORS(app)
+    app = CORS(app)
     app.config["CORS_HEADERS"] = "Content-Type"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
