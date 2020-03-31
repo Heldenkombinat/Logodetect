@@ -19,7 +19,7 @@ else:
 
 PATH_EXEMPLARS = os.path.join(constants.PATH_DATA, "exemplars_100x100_aug")
 UPLOAD_FOLDER = "."
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "mp4"}
 
 app = Flask(__name__)
 app.secret_key = "logodetect key"
