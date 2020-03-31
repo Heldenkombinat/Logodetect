@@ -2,6 +2,7 @@
   <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/hkt_logo_detect.png">
 </p>
 
+[![PyPI version](https://badge.fury.io/py/logodetect.svg)](https://badge.fury.io/py/logodetect)
 ---
 
 `logodetect` is a one-shot detection library to find logos of any kind in video and image data. Go check out
