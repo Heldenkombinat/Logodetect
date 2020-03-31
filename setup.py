@@ -27,7 +27,7 @@ setup(
     ],
     extras_require={
         "tests": ["pytest", "pytest-pep8", "pytest-cov", "mock"],
-        "dev": ["black", "pre-commit"],
+        "dev": ["black", "pre-commit", "flask", "gunicorn"],
     },
     entry_points={"console_scripts": ["logodetect=logodetect.cli:cli"]},
     packages=find_packages(),
