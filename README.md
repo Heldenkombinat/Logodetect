@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/hkt_logo_detect.png">
+  <img src="https://github.com/Heldenkombinat/logodetect/blob/master/hkt_logo_detect.png">
 </p>
 
 [![PyPI version](https://badge.fury.io/py/logodetect.svg)](https://badge.fury.io/py/logodetect)
@@ -19,8 +19,8 @@ This library is available on PyPI, so you can simply run `pip install logodetect
 If you want to build `logodetect` from source, run
 
 ```bash_script
-git clone git@github.com:Heldenkombinat/Logos-Recognition.git
-cd Logos-Recognition
+git clone git@github.com:Heldenkombinat/logodetect.git
+cd logodetect
 pip install -e ".[tests, dev]"
 ```
 
