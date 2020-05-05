@@ -4,10 +4,10 @@
 
 [![PyPI version](https://badge.fury.io/py/logodetect.svg)](https://badge.fury.io/py/logodetect)
 
-Find logos in images and videos in just one-shot. Never be embarrassed again to say that you have a small data situation! `logodetect` is a one-shot detection library to find logos of any kind in video and image data. Go check out
-[our demo if you want to see it in action right away.](https://logodetect.netlify.com/)
+Never be embarrassed again to say that you have a small data situation! `logodetect` is a one-shot detection library to find logos of any kind in video and image data.
 
 Here's a quick example of football footage that can detect all logos on jerseys and the sports field.
+Go check out [our demo if you want to see it in action right away](https://logodetect.netlify.com/).
 
 <p align="center">
   <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/docs/demo.gif">
