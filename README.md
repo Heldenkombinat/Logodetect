@@ -9,7 +9,9 @@ Find logos in images and videos in just one-shot. Never be embarrassed again to 
 
 Here's a quick example of football footage that can detect all logos on jerseys and the sports field.
 
-![one-shot logo detection on video footage](demo.gif)
+<p align="center">
+  <img src="https://github.com/Heldenkombinat/Logos-Recognition/blob/master/docs/demo.gif">
+</p>
 
 ## Introduction
 
