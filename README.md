@@ -3,12 +3,11 @@
 </p>
 
 [![PyPI version](https://badge.fury.io/py/logodetect.svg)](https://badge.fury.io/py/logodetect)
----
 
-`logodetect` is a one-shot detection library to find logos of any kind in video and image data. Go check out
+Find logos in images and videos in just one-shot. Never be embarrassed again to say that you have a small data situation! `logodetect` is a one-shot detection library to find logos of any kind in video and image data. Go check out
 [our demo if you want to see it in action right away.](https://logodetect.netlify.com/)
 
-Here's a quick example of live football footage that can detect the logos on jerseys and the sports fields.
+Here's a quick example of football footage that can detect all logos on jerseys and the sports field.
 
 ![one-shot logo detection on video footage](demo.gif)
 
@@ -45,8 +44,8 @@ This library is available on PyPI, so you can simply run `pip install logodetect
 If you want to build `logodetect` from source, run
 
 ```bash_script
-git clone git@github.com:Heldenkombinat/Logos-Recognition.git
-cd Logos-Recognition
+git clone git@github.com:Heldenkombinat/logodetect.git
+cd logodetect
 pip install -e ".[tests, dev]"
 ```
 

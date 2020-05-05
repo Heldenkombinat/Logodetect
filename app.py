@@ -11,17 +11,24 @@ from flask import (
 from werkzeug.utils import secure_filename
 import backup_constants as constants
 from logodetect.recognizer import append_to_file_name, Recognizer
-from flask_cors import CORS, cross_origin
 
+if "LOCAL" is os.environ:
+    LOCAL = os.environ["LOCAL"]
+else:
+    LOCAL = True
 
 PATH_EXEMPLARS = os.path.join(constants.PATH_DATA, "exemplars_100x100_aug")
 UPLOAD_FOLDER = "."
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "mp4"}
 
 app = Flask(__name__)
 app.secret_key = "logodetect key"
-cors = CORS(app)
-app.config["CORS_HEADERS"] = "Content-Type"
+if LOCAL:
+    print("applying CORS headers")
+    from flask_cors import CORS, cross_origin
+
+    cors = CORS(app)
+    app.config["CORS_HEADERS"] = "Content-Type"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 RECOGNIZER = Recognizer(exemplars_path=PATH_EXEMPLARS)

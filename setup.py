@@ -6,8 +6,8 @@ setup(
     version="0.1.1",
     description="One-shot logo detection for videos and images.",
     long_description="One-shot logo detection for videos and images.",
-    url="https://github.com/Heldenkombinat/Logos-Recognition",
-    download_url="https://github.com/Heldenkombinat/Logos-Recognition/tarball/0.1",
+    url="https://github.com/Heldenkombinat/logodetect",
+    download_url="https://github.com/Heldenkombinat/logodetect/tarball/0.1",
     author="Jorge Davila Chacon",
     author_email="jorge@heldenkombinat.com",
     install_requires=[
@@ -27,7 +27,7 @@ setup(
     ],
     extras_require={
         "tests": ["pytest", "pytest-pep8", "pytest-cov", "mock"],
-        "dev": ["black", "pre-commit"],
+        "dev": ["black", "pre-commit", "flask", "gunicorn"],
     },
     entry_points={"console_scripts": ["logodetect=logodetect.cli:cli"]},
     packages=find_packages(),
