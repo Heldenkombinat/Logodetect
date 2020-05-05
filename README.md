@@ -31,11 +31,11 @@ As a **first reference** against the baseline, we also provide a modified ResNet
 The models that we are including in the repo achieved a reasonable performance after a few training epochs. However, if you would like to improve their performance you can find pointers to various datasets in [6]. Enjoy the code!
 
 ## References
-[1] Ren et. al. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](https://arxiv.org/pdf/1506.01497.pdf) (2016)
-[2] He et. al. [Deep Residual Learning for Image Recognition](http://openaccess.thecvf.com/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf) (2016)
-[3] Hsieh et. al. [One-Shot Object Detection with Co-Attention and Co-Excitation](https://papers.nips.cc/paper/8540-one-shot-object-detection-with-co-attention-and-co-excitation.pdf) (2019)
-[4] Koch et. al. [Siamese Neural Networks for One-shot Image Recognition](https://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf) (2015)
-[5] Bhunia et. al. [A Deep One-Shot Network for Query-based Logo Retrieval](https://arxiv.org/pdf/1811.01395.pdf) (2019)
+[1] Ren et. al. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](https://arxiv.org/pdf/1506.01497.pdf) (2016)\
+[2] He et. al. [Deep Residual Learning for Image Recognition](http://openaccess.thecvf.com/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf) (2016)\
+[3] Hsieh et. al. [One-Shot Object Detection with Co-Attention and Co-Excitation](https://papers.nips.cc/paper/8540-one-shot-object-detection-with-co-attention-and-co-excitation.pdf) (2019)\
+[4] Koch et. al. [Siamese Neural Networks for One-shot Image Recognition](https://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf) (2015)\
+[5] Bhunia et. al. [A Deep One-Shot Network for Query-based Logo Retrieval](https://arxiv.org/pdf/1811.01395.pdf) (2019)\
 [6] Hoi et. al. [LOGO-Net: Large-scale Deep Logo Detection and Brand Recognition with Deep Region-based Convolutional Networks](https://arxiv.org/pdf/1511.02462.pdf) (2015)
 
 ## Installation
