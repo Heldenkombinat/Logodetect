@@ -22,8 +22,7 @@ else:
 DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
 
-BASE_URL = "https://logodetect.s3.eu-central-1.amazonaws.com"
-
+BASE_URL = "https://hkt-logodetect.s3.eu-central-1.amazonaws.com"
 
 def common_options(function):
     function = click.option(
