@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name="logodetect",
-    version="0.1.1",
+    version="1.0.0",
     description="One-shot logo detection for videos and images.",
     long_description="One-shot logo detection for videos and images.",
     url="https://github.com/Heldenkombinat/logodetect",
@@ -34,11 +34,10 @@ setup(
     license="GNU AGPLv3",
     zip_safe=False,
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Environment :: Console",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
         "Programming Language :: Python :: 3",
     ],
 )
