@@ -96,9 +96,9 @@ def init():
 def download(file_name: str, data_type: str):
     print(f">>> Downloading file {file_name} now, please wait...")
 
-    if data_type is "model":
+    if data_type == "model":
         local_path = os.path.join(MODEL_PATH, file_name)
-    elif data_type is "data" or data_type is "base":
+    elif data_type == "data" or data_type == "base":
         local_path = os.path.join(BASE_PATH, file_name)
     else:
         raise ValueError(
@@ -108,13 +108,13 @@ def download(file_name: str, data_type: str):
 
     # only download data if it does not already exist
     if not (
-        (data_type is "data" and os.path.exists(DATA_PATH)) or
-        (data_type is not "data" and os.path.exists(local_path))
+        (data_type == "data" and os.path.exists(DATA_PATH)) or
+        (data_type != "data" and os.path.exists(local_path))
     ):
         url = os.path.join(BASE_URL, file_name)
         get_request = requests.get(url)
         open(local_path, "wb").write(get_request.content)
-        if data_type is "data":
+        if data_type == "data":
             with zipfile.ZipFile(local_path, "r") as zip_ref:
                 zip_ref.extractall(DATA_PATH)
             os.remove(local_path)
