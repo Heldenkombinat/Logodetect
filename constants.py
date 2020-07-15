@@ -32,7 +32,7 @@ SAMPLE_BRANDS = [
     ["pepsi"],
     ["redbull"],
 ]
-CHOICE = 0
+CHOICE = 1
 
 VIDEO_FILENAME = os.path.join(PATH_VIDEO, SAMPLE_VIDEOS[CHOICE])
 IMAGE_FILENAME = os.path.join(PATH_IMAGE, "test_image_small.png")
@@ -89,7 +89,7 @@ AUGMENTER_PARAMS = {
 
 
 # Device management
-DEVICE = "cpu"  # 'cuda:1' etc.
+DEVICE = "cpu"  # {cpu, cuda:1, cuda:2, ...}
 EMBEDDER_DEVICE = DEVICE
 DETECTOR_DEVICE = DEVICE
 CLASSIFIER_DEVICE = DEVICE
