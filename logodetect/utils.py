@@ -82,4 +82,4 @@ def save_df(vectors, file_names, path, net_type="") -> None:
     vectors_list = [v for v in vectors]
     brands = [clean_name(n) for n in file_names]
     logos_df = pd.DataFrame({"brand": brands, "img_vec": vectors_list})
-    logos_df.to_pickle(path + "{}.zip".format(net_type))
+    logos_df.to_pickle(path + "{}.pkl".format(net_type))
