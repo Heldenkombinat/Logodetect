@@ -89,7 +89,6 @@ def init():
     download("embedder.pth", "model")
     download("classifier_resnet18.pth", "model")
     download("data.zip", "data")
-    download("constants.py", "base")
 
 
 def download(file_name: str, data_type: str):
