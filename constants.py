@@ -7,11 +7,13 @@ import os
 if "LOGOS_RECOGNITION" in os.environ:
     PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
 else:
-    PATH_GLOB = os.path.expanduser("~/.hkt/logodetect")
+    PATH_GLOB = os.path.expanduser(os.path.join(
+        os.environ["HOME"], ".hkt", "logodetect"))
+PATH_MODELS = os.path.join(PATH_GLOB, "models")
 PATH_DATA = os.path.join(PATH_GLOB, "data")
 PATH_VIDEO = os.path.join(PATH_DATA, "test_videos")
 PATH_IMAGE = os.path.join(PATH_DATA, "test_images")
-PATH_MODELS = os.path.join(PATH_GLOB, "models")
+PATH_EXEMPLARS = os.path.join(PATH_DATA, "exemplars")
 
 IMAGE_RESIZE = (100, 100)
 MIN_CONFIDENCE = 0.9
@@ -21,14 +23,12 @@ MIN_CONFIDENCE = 0.9
 ###############
 
 SAMPLE_VIDEOS = [
-    "test_video.mp4",
     "test_video_small.mp4",
     "test_video_small_50ms.mp4",
     "football_redbull_small.mp4",
 ]
 SAMPLE_BRANDS = [
     ["pepsi", "redbull", "heineken", "stellaartois"],
-    ["pepsi"],
     ["pepsi"],
     ["redbull"],
 ]
@@ -38,8 +38,8 @@ VIDEO_FILENAME = os.path.join(PATH_VIDEO, SAMPLE_VIDEOS[CHOICE])
 IMAGE_FILENAME = os.path.join(PATH_IMAGE, "test_image_small.png")
 BRAND_LOGOS = SAMPLE_BRANDS[CHOICE]
 
-EXEMPLARS = ["exemplars", "exemplars_100x100", "exemplars_100x100_aug", "exemplars_hq"]
-PATH_EXEMPLARS = os.path.join(PATH_DATA, EXEMPLARS[3])
+TEST_VIDEO = os.path.join(PATH_VIDEO, "test_video_small_50ms.mp4")
+TEST_IMAGE = os.path.join(PATH_IMAGE, "test_image_small.png")
 
 ############
 # Detector #
@@ -55,14 +55,14 @@ DETECTOR_WEIGHTS = os.path.join(PATH_GLOB, "models", "detector.pth")
 
 USE_CLASSIFIER = True
 
-PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, "exemplars_siamese.zip")
+PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, "exemplars_siamese.pkl")
 LOAD_EMBEDDINGS = False
 EXEMPLARS_FORMAT = "jpg"
 
 # Keep embedder algorithm and weights as is
 EMBEDDER_ALG = "siamese_resnet18"
 EMBEDDER_WEIGHTS = os.path.join(PATH_MODELS, "embedder.pth")
-EMBEDDER_IMG_SIZE = 100
+EMBEDDER_IMG_SIZE = 100  # Side pixels of a square image
 
 # choose between "knn" and "siamese"
 CLASSIFIER = "knn"
