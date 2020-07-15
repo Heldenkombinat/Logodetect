@@ -13,6 +13,7 @@ try:
 except:
     import backup_constants as constants
 
+
 out = partial(click.secho, bold=True, err=True)
 
 if "LOGOS_RECOGNITION" in os.environ:
@@ -21,8 +22,8 @@ else:
     BASE_PATH = os.path.expanduser(os.path.join('~', '.hkt', 'logodetect'))
 DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
-
 BASE_URL = "https://hkt-logodetect.s3.eu-central-1.amazonaws.com"
+
 
 def common_options(function):
     function = click.option(
@@ -74,7 +75,8 @@ def video(video_filename, exemplars, output_appendix):
     from logodetect.recognizer import Recognizer
 
     recognizer = Recognizer(exemplars)
-    recognizer.predict(video_filename=video_filename, output_appendix=output_appendix)
+    recognizer.predict(video_filename=video_filename,
+                       output_appendix=output_appendix)
     out("All done! ✨ 🍰 ✨")
 
 
@@ -93,7 +95,7 @@ def init():
 
 def download(file_name: str, data_type: str):
     print(f">>> Downloading file {file_name} now, please wait...")
-    url = os.path.join(BASE_URL, file_name)
+
     if data_type is "model":
         local_path = os.path.join(MODEL_PATH, file_name)
     elif data_type is "data" or data_type is "base":
@@ -103,18 +105,18 @@ def download(file_name: str, data_type: str):
             f"Data type {data_type} not allowed for downloads, pick from 'model', 'data' or "
             f"'base'."
         )
+
+    # only download data if it does not already exist
     if not (
-        data_type is "data"
-        and os.path.exists(DATA_PATH)
-        or data_type is not "data"
-        and os.path.exists(local_path)
+        (data_type is "data" and os.path.exists(DATA_PATH)) or
+        (data_type is not "data" and os.path.exists(local_path))
     ):
-        # only download data if it does not already exist
+        url = os.path.join(BASE_URL, file_name)
         get_request = requests.get(url)
         open(local_path, "wb").write(get_request.content)
         if data_type is "data":
             with zipfile.ZipFile(local_path, "r") as zip_ref:
-                zip_ref.extractall(BASE_PATH)
+                zip_ref.extractall(DATA_PATH)
             os.remove(local_path)
         print(">>> Download complete!")
     else:
