@@ -1,0 +1,27 @@
+# This file is used to prefetch the requirements to speed up docker builds.
+numpy
+scipy
+matplotlib
+sk-video
+moviepy
+opencv-python
+tqdm
+tabulate
+Cython
+tensorboard
+autopep8
+pylint
+pycodestyle
+pycocotools
+pandas
+Pillow
+ipykernel
+
+
+# Download compressed repositories to speedup installationself.
+# Use tar.gz as .zip can fail with unicode filenames.
+https://github.com/aleju/imgaug/archive/master.tar.gz
+
+--find-links "https://download.pytorch.org/whl/torch_stable.html"
+torch==1.5.0+cu101
+torchvision==0.6.0+cu101
