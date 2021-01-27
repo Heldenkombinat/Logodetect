@@ -207,6 +207,10 @@ system devices used.
 implementation details of `logodetect`. Please make sure you know what you're doing before touching
 `constants.py`.
 
+## Notebooks
+
+You can find exemplary jupyter notebooks from the `logodetect` project in the `notebooks/` folder. If
+you're interested in training new models, then `training/notebooks/` might interest you.
 
 ## Docker support
 
