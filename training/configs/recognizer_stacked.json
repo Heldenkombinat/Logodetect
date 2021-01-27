@@ -1,0 +1,79 @@
+{
+    "general": {
+        "device": "cuda:1",
+        "n_epochs": 10000,
+        "early_stop": 100,
+        "batchsize": 128,
+        "num_workers": 20,
+        "seed": 42,
+        "training_detector": false
+    },
+    "dataset": {
+        "train": {
+            "type": "StackedDataset",
+            "args": {
+                "root": "logos",
+                "min_area": 2500,
+                "min_instances": 100,
+                "percent_same": 50,
+                "exclude": [
+                    "redbull",
+                    "redbull_text"
+                ]
+            }
+        },
+        "valid": {
+            "type": "StackedDataset",
+            "args": {
+                "root": "logos",
+                "min_area": 2500,
+                "min_instances": 100,
+                "percent_same": 50,
+                "include": [
+                    "redbull",
+                    "redbull_text"
+                ]
+            }
+        }
+    },
+    "logger": {
+        "type": "TBLogger",
+        "args": {
+            "root": "saved/__auto__",
+            "save_every": 1
+        }
+    },
+    "model": {
+        "type": "stacked_resnet",
+        "args": {
+            "model_type": "resnet18",
+            "pretrained": true,
+            "frozen_backbone": true
+        }
+    },
+    "optimizer": {
+        "type": "AdamW",
+        "args": {
+            "weight_decay": 1e-4,
+            "amsgrad": true
+        }
+    },
+    "trainer": {
+        "type": "ClassifierTrainer",
+        "args": {}
+    },
+    "transform": {
+        "train": {
+            "type": "logos_train",
+            "args": {
+                "resize": 128
+            }
+        },
+        "valid": {
+            "type": "logos_test",
+            "args": {
+                "resize": 128
+            }
+        }
+    }
+}

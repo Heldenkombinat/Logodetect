@@ -1,0 +1,62 @@
+{
+    "general": {
+        "device": "cuda:1",
+        "n_epochs": 10000,
+        "early_stop": 100,
+        "batchsize": 256,
+        "num_workers": 20,
+        "seed": 42,
+        "training_detector": false
+    },
+    "dataset": {
+        "train": {
+            "type": "cifar10",
+            "args": {
+                "train": true
+            }
+        },
+        "valid": {
+            "type": "cifar10",
+            "args": {
+                "train": false
+            }
+        }
+    },
+    "logger": {
+        "type": "TBLogger",
+        "args": {
+            "root": "saved/cifar10/__auto__",
+            "save_every": 1
+        }
+    },
+    "model": {
+        "type": "cifar10_resnet18",
+        "args": {}
+    },
+    "optimizer": {
+        "type": "SGD",
+        "args": {
+            "lr": 1e-3,
+            "weight_decay": 1e-4,
+            "momentum": 0.9
+        }
+    },
+    "trainer": {
+        "type": "ClassifierTrainer",
+        "args": {}
+    },
+    "transform": {
+        "train": {
+            "type": "cifar10_train",
+            "args": {
+                "resize": 32
+            }
+        },
+        "valid": {
+            "type": "cifar10_test",
+            "args": {
+                "resize": 32
+            }
+        }
+    }
+}
