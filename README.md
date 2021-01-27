@@ -84,22 +84,17 @@ Depending on your system and setup, you might have to run the install command as
 
 After successful installation, a CLI tool called `logodetect` becomes available to you. If you invoke `logodetect`
 without any arguments, you will get help on how to use it. To automatically download all models and data needed
-to test the application first run:
+to test the application first run the following command in your clone of this repository:
 
 ```bash_script
+export LOGOS_RECOGNITION=$(pwd)
 logodetect init
 ```
 
-which will download all files to `~/.hkt/logodetect`. Note that if you prefer another folder to download the data,
-please use the environment variable `LOGOS_RECOGNITION`. For instance, if you want to install models and data relative
-to your clone of this repository, use
-
-```bash_script
-export LOGOS_RECOGNITION=path/to/this/folder
-```
-
-before running `logodetect init`, or consider putting this variable in your `.bash_rc`, `.zshrc` or an equivalent
-configuration file on your system.
+which will download all files to the current working directory. Note that if you prefer another folder to download the data,
+please use the environment variable `LOGOS_RECOGNITION` accordingly. Consider putting this variable in your `.bash_rc`, `.zshrc` or an equivalent
+configuration file on your system. If you don't specify a folder, it will default to `~/.hkt/logodetect`, which is not
+recommended.
 
 The `logodetect` CLI tool comes with two main commands, namely `video` and `image`, both of which work
 fairly similarly. In each case you need to provide the input data for which you would  like to detect logos,
