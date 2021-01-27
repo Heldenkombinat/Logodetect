@@ -57,7 +57,6 @@ by learning a separate set of weights for each input.
 The models that we are including in the repo achieved a reasonable performance after a few training epochs.
 However, if you would like to improve their performance you can find pointers to various datasets in [6],
 which can be used in the `training` part of this project.
-Enjoy the code!
 
 ## References
 [1] Ren et. al. [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](https://arxiv.org/pdf/1506.01497.pdf) (2016)\
@@ -249,5 +248,15 @@ or all longer-running integration tests with
 
 ```bash_script
 pytest -m integration
+```
+
+## Building the paper locally
+
+```commandline
+docker run --rm \
+    --volume $PWD:/data \
+    --user $(id -u):$(id -g) \
+    --env JOURNAL=joss \
+    openjournals/paperdraft
 ```
 
