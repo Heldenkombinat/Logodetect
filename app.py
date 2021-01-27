@@ -25,7 +25,7 @@ app = Flask(__name__)
 app.secret_key = "logodetect key"
 if LOCAL:
     print("applying CORS headers")
-    from flask_cors import CORS, cross_origin
+    from flask_cors import CORS
 
     cors = CORS(app)
     app.config["CORS_HEADERS"] = "Content-Type"
@@ -98,5 +98,4 @@ def processed_image(image: str):
 
 
 if __name__ == "__main__":
-    # app.debug = True
     app.run(host="0.0.0.0")
