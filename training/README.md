@@ -6,12 +6,14 @@ on [this template](https://github.com/NullConvergence/mtorch).
 ## Installation
 First, create a new virtual environment and activate it (we're using `conda` here, but you could
 also use `virtualenv`s or similar):
-```
+
+```commandline
 conda create -n test python=3.7
 conda activate test
 ```
 Then clone this repository and install `loreta` with
-```
+
+```commandline
 pip install -e .
 pip install -r requirements.txt
 ```
@@ -19,16 +21,19 @@ pip install -r requirements.txt
 Also, make sure the right libraries are installed on your underlying system (dependencies
 shown for Linux):
 
-`sudo apt-get install libjpeg-dev zlib1g-dev`
+```commandline
+sudo apt-get install libjpeg-dev zlib1g-dev
+```
 
 ## Usage
 
 Choose a JSON file from the `configs` folder and run training with 
 
-```
+```commandline
 python loreta/app.py --config configs/default.json
 ```
 
+This requires you to export a `DATASETS` path first.
 However, note that the data this project is based on is not available in the public domain,
 which is why it is not provided in this repository. This means that the above training script
 won't work, unless you provide your own `data` first, e.g. obtained from pointers in [1].

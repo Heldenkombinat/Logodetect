@@ -16,7 +16,6 @@ from . import trainers as module_trainers
 
 
 def load_modules(config_file):
-    "Add documentation."
     # create transforms
     transform_train = create_transform(
         module_transforms, config_file["transform"]["train"]
@@ -74,21 +73,18 @@ def load_modules(config_file):
 
 
 def create_transform(module, config_file):
-    "Add documentation."
     transform_class = getattr(module, config_file["type"])
     transform_instance = transform_class(**config_file["args"])
     return transform_instance
 
 
 def create_dataset(module, config_file, transform):
-    "Add documentation."
     dataset_class = getattr(module, config_file["type"])
     dataset_instance = dataset_class(transform=transform, **config_file["args"])
     return dataset_instance
 
 
 def create_loader(dataset, config_file, training_detector):
-    "Add documentation."
     used_collate_fn = collate_fn if training_detector else None
     sampler = RandomSampler(dataset)
     data_loader = DataLoader(
@@ -103,21 +99,18 @@ def create_loader(dataset, config_file, training_detector):
 
 
 def create_model(module, config_file):
-    "Add documentation."
     model_class = getattr(module, config_file["type"])
     model_instance, criterion = model_class(**config_file["args"])
     return model_instance, criterion
 
 
 def create_logger(module, config_file):
-    "Add documentation."
     logger_class = getattr(module, config_file["logger"]["type"])
     logger_instance = logger_class(config_file)
     return logger_instance
 
 
 def create_trainer(module, config, config_file):
-    "Add documentation."
     trainer_class = getattr(module, config_file["type"])
     trainer_instance = trainer_class(config, **config_file["args"])
     return trainer_instance

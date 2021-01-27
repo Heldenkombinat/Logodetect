@@ -1,5 +1,3 @@
-"""Classifier module."""
-
 # Pip packages:
 import numpy as np
 from PIL import Image
@@ -19,11 +17,9 @@ from constants import (
 
 
 class Classifier:
-    """Siamese Network classifier.
-    """
+    """Siamese Network classifier."""
 
     def __init__(self, exemplar_paths):
-        "Add documentation."
         # Define class variables:
         self.exemplars_imgs = None
         self.exemplars_brands = None
@@ -35,7 +31,6 @@ class Classifier:
         )
 
     def load_exemplars(self, exemplars_paths):
-        "Add documentation."
         self.exemplars_imgs = []
         self.exemplars_brands = []
         for path in exemplars_paths:
@@ -54,7 +49,6 @@ class Classifier:
                 self.exemplars_brands.append(brand)
 
     def predict(self, detections, image):
-        "Add documentation."
         if len(detections["boxes"]) != 0:
             image = Image.fromarray(image)
             # Compare each detection to each exemplar in one forward pass:
@@ -80,7 +74,6 @@ class Classifier:
         return torch.cat(comb_images).to(CLASSIFIER_DEVICE)
 
     def _process_scores(self, comb_scores, detections):
-        "Add documentation."
         n_detections = len(detections["boxes"])
         n_logos = len(self.exemplars_imgs)
         selections = np.zeros(n_detections).astype(np.bool)

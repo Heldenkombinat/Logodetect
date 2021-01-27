@@ -13,10 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 class TBLogger(object):
-    "Add documentation."
-
     def __init__(self, config_file):
-        "Add documentation."
 
         # Set the save dir:
         self.root = self._set_root(config_file)
@@ -40,7 +37,6 @@ class TBLogger(object):
         self.best_valid_loss = np.inf
 
     def _set_root(self, config_file):
-        "Add documentation."
         if "__auto__" in config_file["logger"]["args"]["root"]:
             # Set a time stamp:
             time_stamp = datetime.fromtimestamp(time.time())
@@ -77,7 +73,6 @@ class TBLogger(object):
         valid_acc=None,
         save_add="",
     ):
-        "Add documentation."
         checkpoint = {
             "model": model.state_dict(),
             "train_loss": train_loss,
@@ -108,7 +103,6 @@ class TBLogger(object):
     def log(
         self, train_loss, valid_loss, model, optimizer, train_acc=None, valid_acc=None
     ):
-        "Add documentation."
         self.epoch += 1
 
         # Add logs:

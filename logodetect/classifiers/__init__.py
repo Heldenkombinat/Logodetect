@@ -42,8 +42,7 @@ def load_model_weights(model, device: str, model_weights: str) -> nn.Sequential:
 
 
 def _binary_stacked_resnet50(device: str, model_weights: str):
-    """Creates a ResNet50 with a 6-channel input.
-    """
+    """Creates a ResNet50 with a 6-channel input."""
     # Load standard, built-in ResNet 50 architecture:
     model = torchvision.models.resnet50(pretrained=False)
 
@@ -69,16 +68,14 @@ def _binary_stacked_resnet50(device: str, model_weights: str):
 
 
 def _binary_stacked_resnet18(device: str, model_weights: str):
-    """Creates a ResNet18 with a 6-channel input.
-    """
+    """Creates a ResNet18 with a 6-channel input."""
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
     return _load_binary_stacked_net(model, device, model_weights)
 
 
 def _load_binary_stacked_net(model, device: str, model_weights: str):
-    """Creates a ResNet18 with a 6-channel input.
-    """
+    """Creates a ResNet18 with a 6-channel input."""
     # Replace the 3-channel input with 6-channel input:
     model.conv1 = nn.Conv2d(
         6, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
@@ -91,8 +88,7 @@ def _load_binary_stacked_net(model, device: str, model_weights: str):
 
 
 def _siamese_resnet18(device: str, model_weights: str, model_out: int = 345):
-    """Loads a pre-trained ResNet18 for Siamese network.
-    """
+    """Loads a pre-trained ResNet18 for Siamese network."""
     # Load standard architecture:
     model = torchvision.models.resnet18(pretrained=False)
 

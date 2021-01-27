@@ -29,8 +29,7 @@ from constants import (
 
 
 class Classifier:
-    """KNN Classifier
-    """
+    """KNN Classifier"""
 
     def __init__(self, exemplar_paths: str) -> None:
 
@@ -108,7 +107,6 @@ class Classifier:
         else:
             print("{} is not a valid distance.".format(DISTANCE))
             sys.exit()
-        # TODO: code smell here, setting a classifier does not suggest training (or returning anything)
         return model.fit(self.exemplars_vectors, self.exemplars_brands)
 
     def predict(self, detections: dict, image: np.ndarray) -> dict:

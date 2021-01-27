@@ -35,10 +35,7 @@ def cifar10(transform, train):
 
 
 class OneClassDataset(Dataset):
-    "Add documentation."
-
     def __init__(self, transform, root, train_valid, train_prop):
-        """"""
         self.transform = transform
         self.root = os.path.join(os.environ["DATASETS"], root)
         self.train_valid = train_valid
@@ -52,7 +49,6 @@ class OneClassDataset(Dataset):
         self.preprocess_dataset()
 
     def _list_subfolder(self, folder):
-        "Add documentation."
         data = sorted(glob(os.path.join(self.root, folder, "*")))
         if self.train_valid == "train":
             prop_idx = int(len(data) * self.train_prop)
@@ -62,7 +58,6 @@ class OneClassDataset(Dataset):
             return data[-prop_idx:]
 
     def preprocess_dataset(self):
-        "Add documentation."
         data_used = -1  # -1: All, 1000: Debugging
         for idx, (image, annot) in tqdm(
             enumerate(
@@ -76,7 +71,6 @@ class OneClassDataset(Dataset):
             self.detections.append(img_detections)
 
     def _preprocess_detections(self, idx, image_path, annotation_path):
-        "Add documentation."
         # Strong checks mean we don't mess with the dataset:
         if self._validate_files(image_path, annotation_path):
 
@@ -94,7 +88,6 @@ class OneClassDataset(Dataset):
             }
 
     def _validate_files(self, image_path, annotation_path):
-        "Add documentation."
         # Check if they exist:
         if not os.path.isfile(image_path) or not os.path.isfile(annotation_path):
             raise Exception(
@@ -126,8 +119,6 @@ class OneClassDataset(Dataset):
 
 
 class StackedDataset(Dataset):
-    "Add documentation."
-
     def __init__(
         self,
         transform,
@@ -190,7 +181,6 @@ class StackedDataset(Dataset):
         self.dataset_info()
 
     def parse_dataset(self):
-        "Add documentation."
         # Gather all images, annotations, and exemplars:
         images_paths = self._list_subfolder("images")
         annotations_paths = self._list_subfolder("annotations")
@@ -215,14 +205,12 @@ class StackedDataset(Dataset):
         self._update_classes()
 
     def _list_subfolder(self, folder):
-        "Add documentation."
         # Include a '.' to ensure the desired format:
         return sorted(glob(os.path.join(self.root, folder, "*.*")))
 
     def _extract_detections(
         self, image_path, annotation_path, exemplars, exemplar_classes
     ):
-        "Add documentation."
         # Strong checks mean we don't mess with the dataset:
         if self._validate_files(image_path, annotation_path):
             # We will also keep track of which brands don't have exemplars:
@@ -264,7 +252,6 @@ class StackedDataset(Dataset):
     def _append_detection(
         self, area, detection, file_idx, image_path, brand, box, det_idx, exemplars
     ):
-        "Add documentation."
         if area < self.min_area:
             self.img_rejected.append(detection)
 
@@ -284,7 +271,6 @@ class StackedDataset(Dataset):
             self.img_detections.append(detection)
 
     def _validate_files(self, image_path, annotation_path):
-        "Add documentation."
         # Check if they exist:
         if not os.path.isfile(image_path) or not os.path.isfile(annotation_path):
             raise Exception(
@@ -315,14 +301,12 @@ class StackedDataset(Dataset):
             return True
 
     def _find_exemplar_idx(self, brand, exemplar_classes):
-        "Add documentation."
         try:
             return exemplar_classes.index(brand)
         except ValueError:
             return None
 
     def _save_detection(self, image_path, brand, box, det_idx):
-        "Add documentation."
         _, _, image_name, ext = get_file_info(image_path)
         save_name = "{}_{:03d}{}".format(image_name, det_idx, ext)
         save_folder = os.path.join(self.root, "image_folder", brand)
@@ -337,7 +321,6 @@ class StackedDataset(Dataset):
         return save_path
 
     def _prune_dataset(self):
-        "Add documentation."
         counter = self._count_classes()
         pruned_detections = []
         for detection in self.detections:
@@ -349,12 +332,10 @@ class StackedDataset(Dataset):
         self.detections = pruned_detections
 
     def _count_classes(self):
-        "Add documentation."
         all_classes = [det["class"] for det in self.detections]
         return Counter(all_classes)
 
     def _update_classes(self):
-        "Add documentation."
         self.classes = sorted(set([det["class"] for det in self.detections]))
         self.class_to_idx = {val: idx for idx, val in enumerate(self.classes)}
         self.idx_to_class = {idx: val for idx, val in enumerate(self.classes)}
@@ -365,11 +346,9 @@ class StackedDataset(Dataset):
             self.detections[idx]["class_idx"] = self.detections_class_idx[idx]
 
     def __len__(self, kind="detections"):
-        "Add documentation."
         return len(self.__dict__[kind])
 
     def dataset_info(self):
-        "Add documentation."
         headers = [
             "Detections",
             "No exemplars",
@@ -397,7 +376,6 @@ class StackedDataset(Dataset):
         print()
 
     def __getitem__(self, idx, kind="detections", name=None, class_name=None):
-        "Add documentation."
         # Get detection:
         detection = self._get_detection(idx, kind, name, class_name)
         # Get the detected logo:
@@ -424,7 +402,6 @@ class StackedDataset(Dataset):
         return stacked, torch.tensor(same_class).float()
 
     def _get_detection(self, idx=None, kind="detections", name=None, class_name=None):
-        "Add documentation."
         detections = self.__dict__[kind]
         if idx is not None:
             # We return the detection:

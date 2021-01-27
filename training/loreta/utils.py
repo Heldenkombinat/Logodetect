@@ -39,7 +39,6 @@ def image_to_gpu_tensor(image, device=None):
 
 
 def extract_annotation(txt_path):
-    "Add documentation."
     csv_reader = csv.reader(open(txt_path, "rt"), delimiter=" ")
     classes = []
     boxes = []
@@ -54,7 +53,6 @@ def extract_annotation(txt_path):
 
 
 def extract_crop(image_path, box):
-    "Add documentation."
     return Image.open(image_path).convert("RGB").crop(box)
 
 
@@ -64,7 +62,6 @@ def extract_crop(image_path, box):
 
 
 def get_file_info(path):
-    "Add documentation."
     root, file = os.path.split(path)
     try:
         name, ext = file.split(".")
@@ -77,7 +74,6 @@ def get_file_info(path):
 
 
 def get_class_name(path):
-    "Add documentation."
     return os.path.split(path)[1].split(".")[0]
 
 
