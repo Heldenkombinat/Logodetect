@@ -1,9 +1,7 @@
 import pytest
 import os
 
-# "constants.py" is only known to the library code within logodetect at runtime,
-# so we use the backup here for simplicity
-from backup_constants import PATH_EXEMPLARS, TEST_IMAGE, TEST_VIDEO
+from constants import PATH_EXEMPLARS, IMAGE_FILENAME, VIDEO_FILENAME
 from logodetect.recognizer import Recognizer
 
 

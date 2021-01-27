@@ -1,7 +1,6 @@
 #!/bin/bash
 
-scp ../backup_constants.py  aws_logodetect:~/logo/
-scp ../backup_constants.py  aws_logodetect:~/logo/constants.py # for good measure
+scp ../constants.py  aws_logodetect:~/logo/
 scp ../setup.py  aws_logodetect:~/logo/
 scp ../requirements.txt  aws_logodetect:~/logo/
 scp ../app.py  aws_logodetect:~/logo/

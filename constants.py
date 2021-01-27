@@ -7,8 +7,9 @@ import os
 if "LOGOS_RECOGNITION" in os.environ:
     PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
 else:
-    PATH_GLOB = os.path.expanduser(os.path.join(
-        os.environ["HOME"], ".hkt", "logodetect"))
+    PATH_GLOB = os.path.expanduser(
+        os.path.join(os.environ["HOME"], ".hkt", "logodetect")
+    )
 PATH_MODELS = os.path.join(PATH_GLOB, "models")
 PATH_DATA = os.path.join(PATH_GLOB, "data")
 PATH_VIDEO = os.path.join(PATH_DATA, "test_videos")
@@ -68,7 +69,6 @@ EMBEDDER_IMG_SIZE = 100  # Side pixels of a square image
 CLASSIFIER = "knn"
 CLASSIFIER_ALG = "knn" if CLASSIFIER == "knn" else "binary_stacked_resnet18"
 
-# TODO: currently only resnet18 seems to work, resnet50 throws a shape error
 CLASSIFIER_WEIGHTS = os.path.join(PATH_MODELS, "classifier_resnet18.pth")
 
 EMBEDDING_SIZE = 345
@@ -86,7 +86,6 @@ AUGMENTER_PARAMS = {
     "AffineShear": [-25, 25],  # shear
     "AffineRotate": [-25, 25],  # rotate
 }
-
 
 # Device management
 DEVICE = "cpu"  # {cpu, cuda:1, cuda:2, ...}
