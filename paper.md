@@ -1,25 +1,25 @@
 ---
 title: "Logodetect: One-shot detection of logos in image and video data"
 tags:
-- Python
-- object detection
-- object recognition
-- computer vision
-- image processing
-- video processing
-- one-shot learning
+  - Python
+  - object detection
+  - object recognition
+  - computer vision
+  - image processing
+  - video processing
+  - one-shot learning
 authors:
-- name: Jorge Davila-Chacon
-affiliation: 1
-- name: Max Pumperla
-affiliation: "2, 3"
+  - name: Jorge Davila-Chacon
+    affiliation: 1
+  - name: Max Pumperla
+    affiliation: "2, 3"
 affiliations:
-- name: Heldenkombinat Technologies GmbH
-index: 1
-- name: IUBH Internationale Hochschule
-index: 2
-- name: Pathmind Inc.
-index: 3
+  - name: Heldenkombinat Technologies GmbH
+    index: 1
+  - name: IUBH Internationale Hochschule
+    index: 2
+  - name: Pathmind Inc.
+    index: 3
 date: 13 August 2017
 bibliography: paper.bib
 ---
