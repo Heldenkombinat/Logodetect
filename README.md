@@ -93,8 +93,27 @@ logodetect init
 
 which will download all files to the current working directory. Note that if you prefer another folder to download the data,
 please use the environment variable `LOGOS_RECOGNITION` accordingly. Consider putting this variable in your `.bash_rc`, `.zshrc` or an equivalent
-configuration file on your system. If you don't specify a folder, it will default to `~/.hkt/logodetect`, which is not
-recommended.
+configuration file on your system. If you don't specify a folder, it will default to `~/.hkt/logodetect`.
+
+After running the `logodetect init` CLI, you'll find data and models relative to the specified folder in the  following
+structure:
+
+```text
+data/
+    exemplars/
+    exemplars_100x100/
+    exemplars_100x100_aug/
+    exemplars_hq/
+    test_images/
+    test_videos/
+models/
+    classifier_resnet18.pth
+    detector.pth
+    embedder.pth
+```
+
+If you're interested in training your own algorithms, it's a good idea to have a look at how the exemplar data is
+structured. For more on training, see the `training` folder and its readme.
 
 The `logodetect` CLI tool comes with two main commands, namely `video` and `image`, both of which work
 fairly similarly. In each case you need to provide the input data for which you would  like to detect logos,
@@ -191,15 +210,21 @@ Options:
   --help
 ```
 
+## Core abstractions
+
+`logodetect` works with a two-phased approach. In the first phase, objects get detected with 
+a [`Detector`](https://github.com/Heldenkombinat/Logodetect/blob/master/logodetect/detectors/faster_rcnn.py#L21),
+and then get compared to and identified with exemplars in a [`Classifier`](https://github.com/Heldenkombinat/Logodetect/blob/master/logodetect/classifiers/siamese.py#L19).
+Both phases get integrated into the inference pipeline using a single [`Recognizer`](https://github.com/Heldenkombinat/Logodetect/blob/master/logodetect/recognizer.py#L27),
+in which we detect potential overlay boxes in video frames or images and then the detected boxes
+get labeled according to their classification.
+
 ## Configuration
 
 The specific parameter settings of the algorithms used in `logodetect` can be modified by adapting
-the file `constants.py`, which has options for all of our detectors, classifiers, data augmenters and
-system devices used.
-
-**Note**: modifying the configuration is for power users only and needs a deeper understanding of the
-implementation details of `logodetect`. Please make sure you know what you're doing before touching
-`constants.py`.
+the file `constants.py`, which has options for all of our detectors, classifiers, data augmenters,
+embeddings and system devices used. Each respective part of `logodetect` can configured
+using the constants in the above file and is well-documented there.
 
 ## Notebooks
 
