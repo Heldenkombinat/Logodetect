@@ -19,16 +19,16 @@ from constants import (
 class Classifier:
     """Siamese Network classifier."""
 
-    def __init__(self, exemplar_paths):
+    def __init__(self, exemplar_paths, classifier_algo=None):
         # Define class variables:
         self.exemplars_imgs = None
         self.exemplars_brands = None
 
+        algo = classifier_algo if classifier_algo else CLASSIFIER_ALG
+
         # Set the network to classify the detections:
         self.load_exemplars(exemplar_paths)
-        self.classifier = classifiers.get(CLASSIFIER_ALG)(
-            CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS
-        )
+        self.classifier = classifiers.get(algo)(CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS)
 
     def load_exemplars(self, exemplars_paths):
         self.exemplars_imgs = []

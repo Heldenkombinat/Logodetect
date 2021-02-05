@@ -31,8 +31,9 @@ from constants import (
 class Classifier:
     """KNN Classifier"""
 
-    def __init__(self, exemplar_paths: str) -> None:
+    def __init__(self, exemplar_paths: str, classifier_algo=None) -> None:
 
+        self.algo = classifier_algo if classifier_algo else CLASSIFIER_ALG
         self.transform = self._compute_transform()
         self.embedder = classifiers.get(EMBEDDER_ALG)(EMBEDDER_DEVICE, EMBEDDER_WEIGHTS)
         self._load_exemplars(exemplar_paths)
@@ -90,20 +91,16 @@ class Classifier:
 
         :return: trained classifier model
         """
-        if CLASSIFIER_ALG is not "knn":
+        if self.algo is not "knn":
             raise ValueError(
                 f"A classifiers.knn.Classifier can only be run with CLASSIFIER_ALG='knn', got {CLASSIFIER_ALG}."
             )
         if DISTANCE.lower() == "minkowski_1":
-            model = classifiers.get(CLASSIFIER_ALG)(
-                n_neighbors=1, metric="minkowski", p="1"
-            )
+            model = classifiers.get(self.algo)(n_neighbors=1, metric="minkowski", p="1")
         elif DISTANCE.lower() == "minkowski_2":
-            model = classifiers.get(CLASSIFIER_ALG)(
-                n_neighbors=1, metric="minkowski", p="2"
-            )
+            model = classifiers.get(self.algo)(n_neighbors=1, metric="minkowski", p="2")
         elif DISTANCE.lower() == "cosine":
-            model = classifiers.get(CLASSIFIER_ALG)(n_neighbors=1, metric="cosine")
+            model = classifiers.get(self.algo)(n_neighbors=1, metric="cosine")
         else:
             print("{} is not a valid distance.".format(DISTANCE))
             sys.exit()
