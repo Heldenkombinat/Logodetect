@@ -35,7 +35,7 @@ and label training data, there is practically no time or economic costs for the 
 procedure, and it also provides a strategic benefit for business as they become self-sufficient
 for a large part of the system maintenance.
 `logodetect` comes with pretrained models, data and an interface that allows users to
-detect logos in images and videos with a single command.
+detect logos in images and videos with a single command. 
 
 # Statement of need
 
@@ -43,7 +43,9 @@ There is plenty of literature on the use of deep-learning for detecting logos, s
 additionally to sharing pretrained algorithms with the community to get started with
 one-shot logo detection and a simple interface to use such detectors, the aim of
 `logodetect` is to provide a flexible architecture to facilitate the comparison of
-different algorithms for one-shot object recognition.
+different algorithms for one-shot object recognition. While [@NEURIPS2019_92af93f7]
+published  a reference implementation with their paper, there are generally few
+high-quality object recognizer architectures available to researchers.
 
 `logodetect` works by first performing _object detection_ on input images and then running
 _object recognition_ on detection results. The idea is that the user can use a generic

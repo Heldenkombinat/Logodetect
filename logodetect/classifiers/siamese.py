@@ -27,10 +27,10 @@ class Classifier:
         algo = classifier_algo if classifier_algo else CLASSIFIER_ALG
 
         # Set the network to classify the detections:
-        self.load_exemplars(exemplar_paths)
+        self._load_exemplars(exemplar_paths)
         self.classifier = classifiers.get(algo)(CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS)
 
-    def load_exemplars(self, exemplars_paths):
+    def _load_exemplars(self, exemplars_paths):
         self.exemplars_imgs = []
         self.exemplars_brands = []
         for path in exemplars_paths:
@@ -48,7 +48,7 @@ class Classifier:
                 self.exemplars_imgs.append((aug_image_gpu))
                 self.exemplars_brands.append(brand)
 
-    def predict(self, detections, image):
+    def predict(self, detections, image: np.ndarray):
         if len(detections["boxes"]) != 0:
             image = Image.fromarray(image)
             # Compare each detection to each exemplar in one forward pass:

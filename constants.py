@@ -4,7 +4,6 @@ Note: leave the base configuration untouched, unless you know what you're doing.
 The parameters that can be tuned concern the
 - Detector (first phase)
 - Classifier (second phase)
-- Embeddings used
 - Data augmentation
 - and the devices you want to use (CPU, GPU, etc.)
 """
@@ -77,10 +76,7 @@ DISTANCE = "cosine"
 # How far apart are detections and exemplars allowed to be to count as recognized?
 MAX_DISTANCE = 0.010
 
-###############
-# Embeddings  #
-###############
-
+# Note: all embedding properties belong to the "knn" classifier
 # Load pre-computed embeddings, if you have them available
 PATH_EXEMPLARS_EMBEDDINGS = os.path.join(PATH_DATA, "exemplars_siamese.pkl")
 LOAD_EMBEDDINGS = False

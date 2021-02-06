@@ -223,7 +223,7 @@ get labeled according to their classification.
 
 The specific parameter settings of the algorithms used in `logodetect` can be modified by adapting
 the file `constants.py`, which has options for all of our detectors, classifiers, data augmenters,
-embeddings and system devices used. Each respective part of `logodetect` can configured
+and system devices used. Each respective part of `logodetect` can configured
 using the constants in the above file and is well-documented there.
 
 ## Notebooks

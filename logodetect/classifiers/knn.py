@@ -134,7 +134,7 @@ class Classifier:
         detections["embeddings"] = detections_mat
         return detections
 
-    def embed_image(self, image):
+    def embed_image(self, image: Image):
         """Embeds an image using the embedding algorithm
 
         :param image: input image
