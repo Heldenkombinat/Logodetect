@@ -9,13 +9,14 @@ import pandas as pd
 from PIL import Image
 from torchvision.transforms import functional as F
 import torch
+from typing import Tuple
 
 
-def open_and_resize(path: str, image_resize: int) -> Image.Image:
+def open_and_resize(path: str, image_resize: Tuple[int, int]) -> Image.Image:
     """Checks if image is valid and moves it to the GPU.
 
     :param path: path to image
-    :param image_resize: int
+    :param image_resize: tuple of two integers
     :return: resized PIL.Image
     """
     return Image.open(path).convert("RGB").resize(image_resize)
