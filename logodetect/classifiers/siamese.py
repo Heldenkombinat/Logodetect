@@ -1,5 +1,3 @@
-"""Classifier module."""
-
 # Pip packages:
 import numpy as np
 from PIL import Image
@@ -19,23 +17,20 @@ from constants import (
 
 
 class Classifier:
-    """Siamese Network classifier.
-    """
+    """Siamese Network classifier."""
 
-    def __init__(self, exemplar_paths):
-        "Add documentation."
+    def __init__(self, exemplar_paths, classifier_algo=None):
         # Define class variables:
         self.exemplars_imgs = None
         self.exemplars_brands = None
 
-        # Set the network to classify the detections:
-        self.load_exemplars(exemplar_paths)
-        self.classifier = classifiers.get(CLASSIFIER_ALG)(
-            CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS
-        )
+        algo = classifier_algo if classifier_algo else CLASSIFIER_ALG
 
-    def load_exemplars(self, exemplars_paths):
-        "Add documentation."
+        # Set the network to classify the detections:
+        self._load_exemplars(exemplar_paths)
+        self.classifier = classifiers.get(algo)(CLASSIFIER_DEVICE, CLASSIFIER_WEIGHTS)
+
+    def _load_exemplars(self, exemplars_paths):
         self.exemplars_imgs = []
         self.exemplars_brands = []
         for path in exemplars_paths:
@@ -53,8 +48,7 @@ class Classifier:
                 self.exemplars_imgs.append((aug_image_gpu))
                 self.exemplars_brands.append(brand)
 
-    def predict(self, detections, image):
-        "Add documentation."
+    def predict(self, detections, image: np.ndarray):
         if len(detections["boxes"]) != 0:
             image = Image.fromarray(image)
             # Compare each detection to each exemplar in one forward pass:
@@ -80,7 +74,6 @@ class Classifier:
         return torch.cat(comb_images).to(CLASSIFIER_DEVICE)
 
     def _process_scores(self, comb_scores, detections):
-        "Add documentation."
         n_detections = len(detections["boxes"])
         n_logos = len(self.exemplars_imgs)
         selections = np.zeros(n_detections).astype(np.bool)

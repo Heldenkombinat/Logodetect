@@ -19,7 +19,7 @@ out = partial(click.secho, bold=True, err=True)
 if "LOGOS_RECOGNITION" in os.environ:
     BASE_PATH = os.environ["LOGOS_RECOGNITION"]
 else:
-    BASE_PATH = os.path.expanduser(os.path.join('~', '.hkt', 'logodetect'))
+    BASE_PATH = os.path.expanduser(os.path.join("~", ".hkt", "logodetect"))
 DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
 BASE_URL = "https://hkt-logodetect.s3.eu-central-1.amazonaws.com"
@@ -75,8 +75,7 @@ def video(video_filename, exemplars, output_appendix):
     from logodetect.recognizer import Recognizer
 
     recognizer = Recognizer(exemplars)
-    recognizer.predict(video_filename=video_filename,
-                       output_appendix=output_appendix)
+    recognizer.predict(video_filename=video_filename, output_appendix=output_appendix)
     out("All done! ✨ 🍰 ✨")
 
 
@@ -108,8 +107,8 @@ def download(file_name: str, data_type: str):
 
     # only download data if it does not already exist
     if not (
-        (data_type == "data" and os.path.exists(DATA_PATH)) or
-        (data_type != "data" and os.path.exists(local_path))
+        (data_type == "data" and os.path.exists(DATA_PATH))
+        or (data_type != "data" and os.path.exists(local_path))
     ):
         url = os.path.join(BASE_URL, file_name)
         get_request = requests.get(url)

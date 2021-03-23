@@ -61,7 +61,7 @@ class Recognizer(object):
         self.cmap = plt.cm.get_cmap("jet", len(self.exemplars_set))
 
     def predict(self, video_filename: str, output_appendix: str = "_output") -> None:
-        """ Predict recognitions, which will come in the following form:
+        """Predict recognitions, which will come in the following form:
 
         recognitions = [{
             'boxes': [] or 2D array (float32),
@@ -90,7 +90,7 @@ class Recognizer(object):
     def predict_image(
         self, image_filename: str, output_appendix: str = "_output"
     ) -> None:
-        """ Predict recognitions for a single input image.
+        """Predict recognitions for a single input image.
 
         :param image_filename: file name of the image to process
         :param output_appendix: this string will be appended to the name of the processed image

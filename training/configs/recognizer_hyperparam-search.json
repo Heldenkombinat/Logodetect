@@ -1,0 +1,113 @@
+{
+    "general": {
+        "device": "cuda:1",
+        "n_epochs": 10000,
+        "early_stop": 100,
+        "batchsize": 128,
+        "num_workers": 20,
+        "seed": 42,
+        "training_detector": false,
+        "hyperparam_fields": [
+            "optimizer/args/lr",
+            "model/args/pretrained",
+            "model/args/model_type",
+            "model/args/frozen_backbone"
+        ]
+    },
+    "dataset": {
+        "train": {
+            "type": "StackedDataset",
+            "args": {
+                "root": "logos",
+                "want_save": false,
+                "min_area": 2500,
+                "min_instances": 10,
+                "percent_same": 50,
+                "exclude": [
+                    "bellodigital_text",
+                    "barbie",
+                    "lg",
+                    "bacardi",
+                    "jello",
+                    "drpepper",
+                    "pepsi",
+                    "heineken",
+                    "stellaartois",
+                    "redbull"
+                ]
+            }
+        },
+        "valid": {
+            "type": "StackedDataset",
+            "args": {
+                "root": "logos",
+                "want_save": false,
+                "min_area": 2500,
+                "min_instances": 10,
+                "percent_same": 50,
+                "include": [
+                    "bellodigital_text",
+                    "barbie",
+                    "lg",
+                    "bacardi",
+                    "jello",
+                    "drpepper"
+                ]
+            }
+        }
+    },
+    "logger": {
+        "type": "TBLogger",
+        "args": {
+            "root": "saved/__auto__",
+            "save_every": 1
+        }
+    },
+    "model": {
+        "type": "stacked_resnet",
+        "args": {
+            "model_type": [
+                "resnet18",
+                "resnet50",
+                "resnet152"
+            ],
+            "pretrained": [
+                false,
+                true
+            ],
+            "frozen_backbone": [
+                false,
+                true
+            ]
+        }
+    },
+    "optimizer": {
+        "type": "SGD",
+        "args": {
+            "lr": [
+                1e-3,
+                5e-3
+            ],
+            "weight_decay": 1e-4,
+            "momentum": 0.9
+        }
+    },
+    "trainer": {
+        "type": "ClassifierTrainer",
+        "args": {}
+    },
+    "transform": {
+        "train": {
+            "type": "transform_big_crop",
+            "args": {
+                "resize": 300
+            }
+        },
+        "valid": {
+            "type": "transform_no_aug",
+            "args": {
+                "resize": 300
+            }
+        }
+    }
+}

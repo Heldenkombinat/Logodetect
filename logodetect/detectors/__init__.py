@@ -24,8 +24,7 @@ def get(function_name: str):
 
 
 def _fasterrcnn_resnet50(device: str, model_weights: str = None):
-    """Creates a FasterRCNN with a ResNet50 backbone.
-    """
+    """Creates a FasterRCNN with a ResNet50 backbone."""
     model = fasterrcnn_resnet50_fpn()
 
     if model_weights:
@@ -36,8 +35,7 @@ def _fasterrcnn_resnet50(device: str, model_weights: str = None):
 
 
 def _binary_fasterrcnn_resnet50(device: str, model_weights: str):
-    """Loads a pre-trained FasterRCNN with a ResNet50 backbone and 2-class output.
-    """
+    """Loads a pre-trained FasterRCNN with a ResNet50 backbone and 2-class output."""
     model = fasterrcnn_resnet50_fpn()
 
     # Get the number of input features for the top layer:

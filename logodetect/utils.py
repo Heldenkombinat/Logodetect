@@ -9,26 +9,14 @@ import pandas as pd
 from PIL import Image
 from torchvision.transforms import functional as F
 import torch
+from typing import Tuple
 
 
-def open_resize_and_load_gpu(path: str, device: str, image_resize: int) -> torch.Tensor:
-    """ Load image and resize it, then convert it
-    to a GPU tensor
-
-    :param path: file path
-    :param device: device string
-    :param image_resize: int
-    :return: resized gpu tensor
-    """
-    image = open_and_resize(path, image_resize)
-    return image_to_gpu_tensor(image, device)
-
-
-def open_and_resize(path: str, image_resize: int) -> Image.Image:
+def open_and_resize(path: str, image_resize: Tuple[int, int]) -> Image.Image:
     """Checks if image is valid and moves it to the GPU.
 
     :param path: path to image
-    :param image_resize: int
+    :param image_resize: tuple of two integers
     :return: resized PIL.Image
     """
     return Image.open(path).convert("RGB").resize(image_resize)
@@ -70,8 +58,7 @@ def clean_name(filename: str) -> str:
 
 def save_df(vectors, file_names, path, net_type="") -> None:
     """Save image vectors and brands stored in file
-    names as pandas DataFrame.
-    TODO: needs clarification.
+    names as pandas DataFrame. Only used for visualisation, e.g. in notebooks.
 
     :param vectors:
     :param file_names:

@@ -1,0 +1,30 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0002-7801-4184",
+      "@type": "Person",
+      "email": "max.pumperla@googlemail.com",
+      "name": "Max Pumperla",
+      "affiliation": ""
+    },
+    {
+      "@id": "",
+      "@type": "Person",
+      "email": "",
+      "name": "Jorge Davila-Chacon",
+      "affiliation": ""
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/Heldenkombinat/Logodetect",
+  "datePublished": "2021-02-05",
+  "dateModified": "2021-02-05",
+  "dateCreated": "2021-02-05",
+  "description": "Logodetect: One-shot detection of logos in image and video data",
+  "keywords": "image-processing, video-processing, object-detection, one-shot-learning, small-dataset, logo-detection",
+  "license": "AGPLv3",
+  "title": "logodetect",
+  "version": "v0.1"
+}

@@ -9,10 +9,14 @@ from flask import (
     after_this_request,
 )
 from werkzeug.utils import secure_filename
-import backup_constants as constants
+
+try:
+    import constants
+except:
+    import backup_constants as constants
 from logodetect.recognizer import append_to_file_name, Recognizer
 
-if "LOCAL" is os.environ:
+if "LOCAL" == os.environ:
     LOCAL = os.environ["LOCAL"]
 else:
     LOCAL = True
@@ -25,7 +29,7 @@ app = Flask(__name__)
 app.secret_key = "logodetect key"
 if LOCAL:
     print("applying CORS headers")
-    from flask_cors import CORS, cross_origin
+    from flask_cors import CORS
 
     cors = CORS(app)
     app.config["CORS_HEADERS"] = "Content-Type"
@@ -98,5 +102,4 @@ def processed_image(image: str):
 
 
 if __name__ == "__main__":
-    # app.debug = True
     app.run(host="0.0.0.0")
