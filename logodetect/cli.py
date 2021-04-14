@@ -11,7 +11,9 @@ import zipfile
 try:
     import constants
 except:
-    import backup_constants as constants
+    from shutil import copyfile
+    copyfile("backup_constants.py", "constants.py")
+    import constants
 
 
 out = partial(click.secho, bold=True, err=True)
@@ -24,6 +26,8 @@ DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
 BASE_URL = "https://hkt-logodetect.s3.eu-central-1.amazonaws.com"
 
+print(BASE_PATH)
+print(constants)
 
 def common_options(function):
     function = click.option(
