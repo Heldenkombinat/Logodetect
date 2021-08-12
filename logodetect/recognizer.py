@@ -168,6 +168,7 @@ class Recognizer(object):
             for box, score, brand in zip(boxes, scores, brands):
                 label = self.exemplars_set.index(brand)
                 color = tuple(np.array(self.cmap(label))[:3] * 255)
+                box = [int(b) for b in box]
                 top_left, bottom_right = tuple(box[:2]), tuple(box[2:])
                 image = cv2.rectangle(image, top_left, bottom_right, color, 2)
                 text = "{}: {:.2f}".format(brand, score)
