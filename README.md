@@ -150,11 +150,12 @@ All done! ✨ 🍰 ✨
 ```
 
 If you want to use another video, you can do so with the `-v` option. Images can be provided
-with the `-i` option and custom exemplars are configured with the `-e` option. That means, if you want to run detection
-for custom video data with custom exemplars, you should use
+with the `-i` option and custom exemplars are configured with the `-e` option. If you want to run `logodetect` with your
+own, custom configuration, please provide a JSON file (like the `config.json` in this repo) with the `-c` option.
+That means, if you want to run detection for custom video data with custom exemplars, you should use
 
 ```bash_script
-logodetect video -v <path-to-video> -e <path-to-exemplars-folder>
+logodetect video -v <path-to-video> -e <path-to-exemplars-folder> -c <path-to-custom-config-json>
 ```
 
 ### Minimal web application for image recognition
@@ -223,10 +224,10 @@ get labeled according to their classification.
 
 ## Configuration
 
-The specific parameter settings of the algorithms used in `logodetect` can be modified by adapting
-the file `constants.py`, which has options for all of our detectors, classifiers, data augmenters,
-and system devices used. Each respective part of `logodetect` can configured
-using the constants in the above file and is well-documented there.
+The specific parameter settings of the algorithms used in `logodetect`, i.e. options for all of our detectors, 
+classifiers, data augmenters, and system devices used, can be changed by providing a `config.json` file with the
+`-c` flag in the main CLI commands explained above. The example `config.json` file explains the options you have
+and what exactly you can modify in `logodetect`.
 
 ## Notebooks
 
