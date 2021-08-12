@@ -15,13 +15,7 @@ from moviepy.editor import (
 )
 
 from logodetect.utils import clean_name
-from constants import (
-    DETECTOR,
-    CLASSIFIER,
-    USE_CLASSIFIER,
-    BRAND_LOGOS,
-    EXEMPLARS_FORMAT,
-)
+from logodetect.constants import get_recognizer_config, BRAND_LOGOS
 
 
 class Recognizer(object):
@@ -33,7 +27,8 @@ class Recognizer(object):
     accordingly and the result is stored as output file.
     """
 
-    def __init__(self, exemplars_path: str = None) -> None:
+    def __init__(self, exemplars_path: str = None, config=None) -> None:
+        self.config = get_recognizer_config(config)
         self.video = None
         self.audio = None
         self.frame_duration = None
@@ -41,16 +36,20 @@ class Recognizer(object):
         if exemplars_path:
             self.set_exemplars(exemplars_path)
 
-        self.detector = import_module(f"logodetect.{DETECTOR}").Detector()
-        if USE_CLASSIFIER:
+        self.detector = import_module(
+            f"logodetect.{self.config.get('DETECTOR')}"
+        ).Detector(config=self.config)
+        if self.config.get("USE_CLASSIFIER"):
             self.classifier = import_module(
-                f"logodetect.classifiers.{CLASSIFIER}"
-            ).Classifier(self.exemplar_paths)
+                f"logodetect.classifiers.{self.config.get('CLASSIFIER')}"
+            ).Classifier(exemplar_paths=self.exemplar_paths, config=self.config)
 
     def set_exemplars(self, exemplars_path: str) -> None:
         self.exemplars_path = exemplars_path
         all_paths = glob.glob(
-            os.path.join(self.exemplars_path, "*.{}".format(EXEMPLARS_FORMAT))
+            os.path.join(
+                self.exemplars_path, "*.{}".format(self.config.get("EXEMPLARS_FORMAT"))
+            )
         )
         self.exemplar_paths = [
             path for path in all_paths if clean_name(path) in BRAND_LOGOS
@@ -113,7 +112,7 @@ class Recognizer(object):
         if not recognitions:
             recognitions = []
         detections = self.detector.predict(frame)
-        if USE_CLASSIFIER:
+        if self.config.get("USE_CLASSIFIER"):
             classifications = self.classifier.predict(detections, frame)
             recognitions.append(classifications)
         else:

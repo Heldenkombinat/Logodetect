@@ -13,7 +13,6 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY . /app
-COPY constants.py /app/constants.py
 
 EXPOSE 5000
 ENTRYPOINT [ "python" ]

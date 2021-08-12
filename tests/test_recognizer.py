@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from constants import PATH_EXEMPLARS, IMAGE_FILENAME, VIDEO_FILENAME
+from logodetect.constants import PATH_EXEMPLARS, IMAGE_FILENAME, VIDEO_FILENAME
 from logodetect.recognizer import Recognizer, append_to_file_name
 
 import cv2

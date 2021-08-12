@@ -10,10 +10,7 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 
-try:
-    import constants
-except:
-    import backup_constants as constants
+from logodetect import constants
 from logodetect.recognizer import append_to_file_name, Recognizer
 
 if "LOCAL" == os.environ:

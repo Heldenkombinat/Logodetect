@@ -6,17 +6,19 @@ import numpy as np
 from PIL import Image
 from imgaug import augmenters
 
-from constants import AUGMENTER_PARAMS
+from logodetect.constants import get_recognizer_config
 
 
-def get_augmentations(image: Image.Image, params: dict = AUGMENTER_PARAMS) -> list:
+def get_augmentations(image: Image.Image, config: dict = None) -> list:
     """Get a list of augmented images for an image,
     according to the specified augmentation
 
     :param image: a PIL.Image instance
-    :param params: dictionary of augmenter params.
+    :param config: full recognizer configuration, can be empty
     :return: list of augmented PIL.Image images
     """
+    new_config = get_recognizer_config(config)
+    params = new_config.get("AUGMENTER_PARAMS")
     param_product = itertools.product(*params.values())
     return [augment_image(image, *param) for param in param_product]
 

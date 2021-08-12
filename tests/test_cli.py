@@ -18,7 +18,16 @@ def test_image():
 
 
 @pytest.mark.integration
-def test_video():
+def test_image_config():
     runner = CliRunner()
-    result = runner.invoke(video, ["-v", "./data/test_videos/test_video_small.mp4"])
+    result = runner.invoke(
+        image, ["-i", "./data/test_images/test_image_small.png", "-c", "config.json"]
+    )
     assert not result.exception
+
+
+# @pytest.mark.integration
+# def test_video():
+#     runner = CliRunner()
+#     result = runner.invoke(video, ["-v", "./data/test_videos/test_video_small.mp4"])
+#     assert not result.exception

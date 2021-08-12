@@ -1,0 +1,47 @@
+{
+    "DETECTOR": "detectors.faster_rcnn",
+    "DETECTOR_ALG": "binary_fasterrcnn_resnet50",
+    "DETECTOR_WEIGHTS": "/Users/maxpumperla/.hkt/logodetect/models/detector.pth",
+    "USE_CLASSIFIER": true,
+    "CLASSIFIER": "knn",
+    "CLASSIFIER_WEIGHTS": "/Users/maxpumperla/.hkt/logodetect/models/classifier_resnet18.pth",
+    "DISTANCE": "cosine",
+    "MAX_DISTANCE": 0.01,
+    "PATH_EXEMPLARS_EMBEDDINGS": "/Users/maxpumperla/.hkt/logodetect/data/exemplars_siamese.pkl",
+    "LOAD_EMBEDDINGS": false,
+    "EMBEDDING_SIZE": 345,
+    "EMBEDDER_ALG": "siamese_resnet18",
+    "EMBEDDER_WEIGHTS": "/Users/maxpumperla/.hkt/logodetect/models/embedder.pth",
+    "EMBEDDER_IMG_SIZE": 100,
+    "EXEMPLARS_FORMAT": "jpg",
+    "IMAGE_RESIZE": [
+        100,
+        100
+    ],
+    "MIN_CONFIDENCE": 0.9,
+    "AUGMENTER_PARAMS": {
+        "Multiply": [
+            0.5,
+            1.5
+        ],
+        "GaussianBlur": [
+            0.4
+        ],
+        "AdditiveGaussianNoise": [
+            51.0
+        ],
+        "AffineShear": [
+            -25,
+            25
+        ],
+        "AffineRotate": [
+            -25,
+            25
+        ]
+    },
+    "DEVICE": "cpu",
+    "EMBEDDER_DEVICE": "cpu",
+    "DETECTOR_DEVICE": "cpu",
+    "CLASSIFIER_DEVICE": "cpu",
+    "CLASSIFIER_ALG": "knn"
+}

@@ -1,7 +1,7 @@
 from logodetect.classifiers import knn, siamese
 from logodetect.recognizer import Recognizer
 from logodetect.detectors.faster_rcnn import Detector
-import constants
+from logodetect import constants
 
 import cv2
 import pytest

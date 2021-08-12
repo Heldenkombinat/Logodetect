@@ -13,41 +13,33 @@ from logodetect.utils import (
     open_and_resize,
     clean_name,
 )
-from constants import (
-    CLASSIFIER_ALG,
-    PATH_EXEMPLARS_EMBEDDINGS,
-    EMBEDDER_ALG,
-    EMBEDDER_WEIGHTS,
-    EMBEDDER_DEVICE,
-    BRAND_LOGOS,
-    IMAGE_RESIZE,
-    LOAD_EMBEDDINGS,
-    EMBEDDING_SIZE,
-    DISTANCE,
-    MAX_DISTANCE,
-)
+from logodetect.constants import BRAND_LOGOS, get_recognizer_config
 
 
 class Classifier:
     """KNN Classifier"""
 
-    def __init__(self, exemplar_paths: str, classifier_algo=None) -> None:
+    def __init__(
+        self, exemplar_paths: str, classifier_algo=None, config: dict = None
+    ) -> None:
 
-        self.algo = classifier_algo if classifier_algo else CLASSIFIER_ALG
+        self.classifier_algo = classifier_algo
+        self.config = get_recognizer_config(config)
         self.transform = self._compute_transform()
-        self.embedder = classifiers.get(EMBEDDER_ALG)(EMBEDDER_DEVICE, EMBEDDER_WEIGHTS)
+        self.embedder = classifiers.get(self.config.get("EMBEDDER_ALG"))(
+            self.config.get("EMBEDDER_DEVICE"), self.config.get("EMBEDDER_WEIGHTS")
+        )
         self._load_exemplars(exemplar_paths)
         self.classifier = self._set_classifier()
 
-    @staticmethod
-    def _compute_transform() -> torchvision.transforms.Compose:
+    def _compute_transform(self) -> torchvision.transforms.Compose:
         """Compute image transform for inference.
 
         :return: torchvision transform
         """
         return torchvision.transforms.Compose(
             [
-                torchvision.transforms.Resize(IMAGE_RESIZE),
+                torchvision.transforms.Resize(self.config.get("IMAGE_RESIZE")),
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(
                     (0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)
@@ -61,9 +53,9 @@ class Classifier:
         :param exemplars_paths: path to exemplars folder
         :return: None
         """
-        if LOAD_EMBEDDINGS:
+        if self.config.get("LOAD_EMBEDDINGS"):
             # Load embeddings and names of exemplars:
-            exemplars = pd.read_pickle(PATH_EXEMPLARS_EMBEDDINGS)
+            exemplars = pd.read_pickle(self.config.get("PATH_EXEMPLARS_EMBEDDINGS"))
             mask = exemplars["brand"].isin(BRAND_LOGOS)
             self.exemplars_vectors = list(exemplars["img_vec"][mask])
             self.exemplars_brands = list(exemplars["brand"][mask])
@@ -72,7 +64,7 @@ class Classifier:
             self.exemplars_brands = []
             for path in exemplars_paths:
                 brand = clean_name(path)
-                image = open_and_resize(path, IMAGE_RESIZE)
+                image = open_and_resize(path, self.config.get("IMAGE_RESIZE"))
 
                 # Store clean image:
                 embedding = self.embed_image(image)
@@ -91,18 +83,23 @@ class Classifier:
 
         :return: trained classifier model
         """
-        if self.algo is not "knn":
+        algo = self.config.get("CLASSIFIER_ALG")
+        self.algo = self.classifier_algo if self.classifier_algo else algo
+
+        if self.algo != "knn":
             raise ValueError(
-                f"A classifiers.knn.Classifier can only be run with CLASSIFIER_ALG='knn', got {CLASSIFIER_ALG}."
+                f"A classifiers.knn.Classifier can only be run with CLASSIFIER_ALG='knn', "
+                f"got {self.algo}."
             )
-        if DISTANCE.lower() == "minkowski_1":
+        distance = self.config.get("DISTANCE")
+        if distance.lower() == "minkowski_1":
             model = classifiers.get(self.algo)(n_neighbors=1, metric="minkowski", p="1")
-        elif DISTANCE.lower() == "minkowski_2":
+        elif distance.lower() == "minkowski_2":
             model = classifiers.get(self.algo)(n_neighbors=1, metric="minkowski", p="2")
-        elif DISTANCE.lower() == "cosine":
+        elif distance.lower() == "cosine":
             model = classifiers.get(self.algo)(n_neighbors=1, metric="cosine")
         else:
-            print("{} is not a valid distance.".format(DISTANCE))
+            print("{} is not a valid distance.".format(distance))
             sys.exit()
         return model.fit(self.exemplars_vectors, self.exemplars_brands)
 
@@ -126,9 +123,11 @@ class Classifier:
         :param detections: precomputed detections
         :return: detections
         """
-        detections_mat = np.zeros((len(detections["boxes"]), EMBEDDING_SIZE))
+        detections_mat = np.zeros(
+            (len(detections["boxes"]), self.config.get("EMBEDDING_SIZE"))
+        )
         for idx, box in enumerate(detections["boxes"]):
-            crop_image = image.crop(box).resize(IMAGE_RESIZE)
+            crop_image = image.crop(box).resize(self.config.get("IMAGE_RESIZE"))
             embedding = self.embed_image(crop_image)
             detections_mat[idx, :] = embedding
         detections["embeddings"] = detections_mat
@@ -141,7 +140,9 @@ class Classifier:
         :return: normalized embedding
         """
         image = (
-            self.transform(image).unsqueeze(0).to(EMBEDDER_DEVICE, dtype=torch.float)
+            self.transform(image)
+            .unsqueeze(0)
+            .to(self.config.get("EMBEDDER_DEVICE"), dtype=torch.float)
         )
         embedding = self.embedder(image)
         normalized_embedding = functional.normalize(embedding, p=2, dim=1)
@@ -157,7 +158,7 @@ class Classifier:
         dists, classes = self.classifier.kneighbors(detections["embeddings"])
         brands = [self.exemplars_brands[idx] for idx in classes.flatten()]
         detections["brands"] = np.array(brands)
-        selections = (dists < MAX_DISTANCE).flatten()
+        selections = (dists < self.config.get("MAX_DISTANCE")).flatten()
         return self._select_detections(detections, selections)
 
     @staticmethod

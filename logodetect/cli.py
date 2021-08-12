@@ -5,15 +5,10 @@ import click
 from functools import partial
 import requests
 import zipfile
+import json
 
-# Note that this little dance is needed to dynamically load "constants.py" at run-time
-# from without the repo (for users that don't clone it, but solely use pip).
-try:
-    import constants
-except:
-    from shutil import copyfile
-    copyfile("backup_constants.py", "constants.py")
-    import constants
+from logodetect import constants
+from logodetect.recognizer import Recognizer
 
 
 out = partial(click.secho, bold=True, err=True)
@@ -26,8 +21,6 @@ DATA_PATH = os.path.join(BASE_PATH, "data")
 MODEL_PATH = os.path.join(BASE_PATH, "models")
 BASE_URL = "https://hkt-logodetect.s3.eu-central-1.amazonaws.com"
 
-print(BASE_PATH)
-print(constants)
 
 def common_options(function):
     function = click.option(
@@ -44,6 +37,13 @@ def common_options(function):
         required=False,
         help="string appended to your resulting file",
     )(function)
+    function = click.option(
+        "-c",
+        "--config_file",
+        default=None,
+        required=False,
+        help="path to file containing a logodetect config JSON",
+    )(function)
     return function
 
 
@@ -56,10 +56,12 @@ def common_options(function):
     help="path to your input image",
 )
 @common_options
-def image(image_filename, exemplars, output_appendix):
-    from logodetect.recognizer import Recognizer
-
-    recognizer = Recognizer(exemplars)
+def image(image_filename, exemplars, output_appendix, config_file):
+    config = None
+    if config_file:
+        with open(config_file, "r") as f:
+            config = json.load(f)
+    recognizer = Recognizer(exemplars, config)
     recognizer.predict_image(
         image_filename=image_filename, output_appendix=output_appendix
     )
@@ -75,10 +77,13 @@ def image(image_filename, exemplars, output_appendix):
     help="path to your input video",
 )
 @common_options
-def video(video_filename, exemplars, output_appendix):
-    from logodetect.recognizer import Recognizer
+def video(video_filename, exemplars, output_appendix, config_file):
+    config = None
+    if config_file:
+        with open(config_file, "r") as f:
+            config = json.load(f)
+    recognizer = Recognizer(exemplars, config)
 
-    recognizer = Recognizer(exemplars)
     recognizer.predict(video_filename=video_filename, output_appendix=output_appendix)
     out("All done! ✨ 🍰 ✨")
 
@@ -89,7 +94,6 @@ def init():
     print(
         ">>> Note that downloading all model and data files might take a few minutes!"
     )
-
     download("detector.pth", "model")
     download("embedder.pth", "model")
     download("classifier_resnet18.pth", "model")

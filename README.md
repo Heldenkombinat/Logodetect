@@ -189,6 +189,7 @@ Usage: logodetect image [OPTIONS]
 
 Options:
   -i, --image_filename TEXT   path to your input image
+  -c, --config_file TEXT      path to file containing a logodetect config JSON
   -o, --output_appendix TEXT  string appended to your resulting file
   -e, --exemplars TEXT        path to your exemplars folder
   --help                      Show this message and exit.
@@ -205,9 +206,10 @@ Usage: logodetect video [OPTIONS]
 
 Options:
   -v, --video_filename TEXT   path to your input video
+  -c, --config_file TEXT      path to file containing a logodetect config JSON
   -o, --output_appendix TEXT  string appended to your resulting file
   -e, --exemplars TEXT        path to your exemplars folder
-  --help
+  --help                      Show this message and exit.
 ```
 
 ## Core abstractions

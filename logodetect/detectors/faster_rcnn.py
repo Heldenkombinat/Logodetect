@@ -11,21 +11,19 @@ from PIL import Image
 # Current library:
 from logodetect import detectors
 from logodetect.utils import image_to_gpu_tensor
-from constants import (
-    DETECTOR_DEVICE,
-    DETECTOR_ALG,
-    DETECTOR_WEIGHTS,
-    MIN_CONFIDENCE,
-)
+from logodetect.constants import get_recognizer_config
 
 
 class Detector:
     """Detect from input images. Users only need to implement the "predict" function
     below to implement a Detector"""
 
-    def __init__(self):
-        model = detectors.get(DETECTOR_ALG)
-        self.model = model(DETECTOR_DEVICE, DETECTOR_WEIGHTS)
+    def __init__(self, config: dict = None):
+        self.config = get_recognizer_config(config)
+        model = detectors.get(self.config.get("DETECTOR_ALG"))
+        self.model = model(
+            self.config.get("DETECTOR_DEVICE"), self.config.get("DETECTOR_WEIGHTS")
+        )
 
     @torch.no_grad()
     def predict(self, image: Image) -> dict:
@@ -34,7 +32,7 @@ class Detector:
         :param image: PIL.Image
         :return: dictionary with detections
         """
-        image = image_to_gpu_tensor(image, DETECTOR_DEVICE)
+        image = image_to_gpu_tensor(image, self.config.get("DETECTOR_DEVICE"))
         # Always returns list with one element:
         raw_detections = self.model(image)[0]
         return self._process_detections(raw_detections)
@@ -43,7 +41,7 @@ class Detector:
         # Move to cpu:
         detections = self._detections_to_cpu(detections)
         # keep the ones above some (potential) threshold
-        selections = np.array(detections["scores"] > MIN_CONFIDENCE)
+        selections = np.array(detections["scores"] > self.config.get("MIN_CONFIDENCE"))
         return self._select_detections(detections, selections)
 
     def _detections_to_cpu(self, detections):
