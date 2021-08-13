@@ -18,7 +18,7 @@ if "LOCAL" == os.environ:
 else:
     LOCAL = True
 
-PATH_EXEMPLARS = os.path.join(constants.PATH_DATA, "exemplars_100x100_aug")
+PATH_EXEMPLARS = constants.PATH_EXEMPLARS
 UPLOAD_FOLDER = "."
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "mp4"}
 
