@@ -8,7 +8,7 @@ import pytest
 
 @pytest.mark.unit
 def test_augmentation():
-    path = "data/exemplars/adidas.jpg"
+    path = "data/exemplars/redbull_1.jpg"
     IMAGE_RESIZE = (100, 100)
     image = open_and_resize(path, IMAGE_RESIZE)
 

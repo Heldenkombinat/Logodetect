@@ -17,7 +17,7 @@ def test_siamese():
     )
 
     detector = Detector()
-    image = cv2.imread("./data/exemplars/3m.jpg")
+    image = cv2.imread("./data/exemplars/pepsi_1.jpg")
     detections = detector.predict(image)
 
     final_detections = classifier.predict(detections, image)
@@ -32,7 +32,7 @@ def test_knn():
     )
 
     detector = Detector()
-    image = cv2.imread("./data/exemplars/3m.jpg")
+    image = cv2.imread("./data/exemplars/pepsi_1.jpg")
     detections = detector.predict(image)
 
     final_detections = classifier.predict(detections, image)
