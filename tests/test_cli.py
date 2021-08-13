@@ -21,7 +21,7 @@ def test_image():
 def test_image_config():
     runner = CliRunner()
     result = runner.invoke(
-        image, ["-i", "./data/test_images/test_image_small.png", "-c", "config.json"]
+        image, ["-i", "./data/test_images/test_image_small.png", "-c", "./config.json"]
     )
     assert not result.exception
 
