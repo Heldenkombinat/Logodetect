@@ -15,9 +15,7 @@ import os
 if "LOGOS_RECOGNITION" in os.environ:
     PATH_GLOB = os.environ["LOGOS_RECOGNITION"]
 else:
-    PATH_GLOB = os.path.expanduser(
-        os.path.join(os.environ["HOME"], ".hkt", "logodetect")
-    )
+    PATH_GLOB = os.path.expanduser(os.path.join("~", ".hkt", "logodetect"))
 
 PATH_MODELS = os.path.join(PATH_GLOB, "models")
 PATH_DATA = os.path.join(PATH_GLOB, "data")
