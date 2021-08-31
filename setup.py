@@ -3,11 +3,11 @@ from setuptools import find_packages
 
 setup(
     name="logodetect",
-    version="1.0.2",
+    version="1.1.0",
     description="One-shot logo detection for videos and images.",
     long_description="One-shot logo detection for videos and images.",
     url="https://github.com/Heldenkombinat/logodetect",
-    download_url="https://github.com/Heldenkombinat/logodetect/tarball/0.1",
+    download_url="https://github.com/Heldenkombinat/logodetect/tarball/1.1.0",
     author="Jorge Davila Chacon",
     author_email="jorge@heldenkombinat.com",
     install_requires=[
