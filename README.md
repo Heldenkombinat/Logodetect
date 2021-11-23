@@ -68,7 +68,7 @@ which can be used in the `training` part of this project.
 
 ## Installation
 
-This library is available on PyPI, so you can simply run `pip install logodetect` to install it.
+This library is intended fo Linux-based OS and it's available on PyPI, so you can simply run `pip install logodetect` to install it.
 Make sure you have Python version 3.7 or later installed and to have an up-to-date `pip` version
 by running `pip install -U pip`. Also, we recommend working with virtual environments, but that
 is ultimately up to you.
