@@ -42,7 +42,7 @@ setup(
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Environment :: Console",
-        "Operating System :: OS Independent",
+        "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3",
     ],
 )
