@@ -17,6 +17,7 @@ setup(
         "Flask-Cors>=3.0.9",
         "gunicorn>=20.0.4",
         "imgaug>=0.4.0",
+        "jupyterlab==3.2.4",
         "matplotlib>=2.2.5",
         "moviepy>=1.0.1",
         "numpy>=1.18.2",
