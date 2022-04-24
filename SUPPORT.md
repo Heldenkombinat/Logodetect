@@ -1,7 +1,7 @@
 # Support
 
 Thank you for your interest in Logodetect!
-If you have any questions, please contact us at [logodetect@heldenkombinat.com][logodetect@heldenkombinat.com]
+If you have any questions, please contact us at [logodetect@heldenkombinat.com](logodetect@heldenkombinat.com)
 Either by reporting a bug, by suggesting a feature or by submitting a pull request,
 you can help us improve the project.
 
@@ -14,16 +14,16 @@ you'd like to see documented.
 ## Code of Conduct
 
 By participating in this project, you are expected to uphold
-our [Code of Conduct][support/CODE_OF_CONDUCT.md].
+our [Code of Conduct](support/CODE_OF_CONDUCT.md).
 
 
 ## Issues
 
 Please make use of the following templates for your reports and requests:
-- [`BUG_REPORT.md`][support/BUG_REPORT.md]
-- [`FEATURE_REQUEST.md`][support/FEATURE_REQUEST.md]
+- [`BUG_REPORT.md`](support/BUG_REPORT.md)
+- [`FEATURE_REQUEST.md`](support/FEATURE_REQUEST.md)
 
 
 ## Contributions
 
-For contributions, please follow the indications in [`PULL_REQUEST.md`][support/PULL_REQUEST.md].
+For contributions, please follow the indications in [`PULL_REQUEST.md`](support/PULL_REQUEST.md).
