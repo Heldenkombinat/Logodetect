@@ -53,6 +53,8 @@ separate pass as in [4], it concatenates both inputs and processes them in one p
 more closely the architecture proposed by [5], where the assumption is that the exemplars often have
 more high-frequency components than the detections, and therefore the model can increase its accuracy
 by learning a separate set of weights for each input.
+However, our proposed architecture splits the detection and classification tasks in two sepparate stages,
+which allows the use, and comparisson, of different classifiers for the seccond stage.
 
 The models that we are including in the repo achieved a reasonable performance after a few training epochs.
 However, if you would like to improve their performance you can find pointers to various datasets in [6],
