@@ -61,7 +61,7 @@ def get_recognizer_config(config: dict = None) -> dict:
         "CLASSIFIER_WEIGHTS": os.path.join(PATH_MODELS, "classifier_resnet18.pth"),
         # Distance measure used. Choose from: cosine, minkowski_1, or minkowski_2
         "DISTANCE": "cosine",
-        # How far apart are detections and exemplars allowed to be to count as recognized?
+        # Determined empirically: How far apart are detections and exemplars allowed to be to count as recognized?
         "MAX_DISTANCE": 0.010,
         "PATH_EXEMPLARS_EMBEDDINGS": os.path.join(PATH_DATA, "exemplars_siamese.pkl"),
         "LOAD_EMBEDDINGS": False,

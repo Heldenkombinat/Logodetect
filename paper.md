@@ -81,6 +81,8 @@ in [@Koch2015SiameseNN], it concatenates both inputs and processes them in one p
 This concept follows more closely the architecture proposed by [@BHUNIA2019106965], where the
 assumption is that the exemplars often have more high-frequency components than the detections,
 and therefore the model can increase its accuracy by learning a separate set of weights for each input.
+However, our proposed architecture splits the detection and classification tasks in two separate stages,
+which allows the use, and comparison, of different classifiers for the second stage.
 
 The code also provides functionality to add various transformations, so the user has the option
 to augment each exemplar with different transformations if desired. The user simply adds one
