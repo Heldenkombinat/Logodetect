@@ -290,3 +290,6 @@ docker run --rm \
     openjournals/paperdraft
 ```
 
+## Support
+
+For support, issues and contributions, please follow the guidelines in [`SUPPORT.md`][SUPPORT.md].
