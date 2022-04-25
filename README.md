@@ -3,6 +3,7 @@
 </p>
 
 [![PyPI version](https://badge.fury.io/py/logodetect.svg)](https://badge.fury.io/py/logodetect)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03124/status.svg)](https://doi.org/10.21105/joss.03124)
 
 Never be embarrassed again to say you have no big data! `logodetect` is a one-shot
 detection library to find logos of any kind in video and image data.
