@@ -292,4 +292,4 @@ docker run --rm \
 
 ## Support
 
-For support, issues and contributions, please follow the guidelines in [`SUPPORT.md`][SUPPORT.md].
+For support, issues and contributions, please follow the guidelines in [`SUPPORT.md`](SUPPORT.md).
